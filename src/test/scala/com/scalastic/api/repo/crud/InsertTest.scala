@@ -1,7 +1,8 @@
-package com.scalastic.api.repo
+package com.scalastic.api.repo.crud
 
 import com.scalastic.api.config.PropertiesLoader.{PERSON_INDEX, PERSON_TYPE}
 import com.scalastic.api.entities.Person
+import com.scalastic.api.repo.ElasticQueryBuilder
 
 /**
   * Created by Ghazi Naceur on 07/04/2019
