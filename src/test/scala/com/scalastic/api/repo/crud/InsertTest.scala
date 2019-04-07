@@ -13,4 +13,6 @@ object InsertTest extends App {
   val response = ElasticQueryBuilder.insert(PERSON_INDEX, PERSON_TYPE, person.toMap())
   println(response.toString)
   println(response.status())
+
+  System.exit(0)
 }

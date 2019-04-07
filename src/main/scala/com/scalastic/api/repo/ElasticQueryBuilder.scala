@@ -62,6 +62,7 @@ object ElasticQueryBuilder {
     response.getSource.asScala.map(kv => (kv._1, kv._2)).toMap
   }
 
+  // Getting the first page
   def getAll(es_index: String): List[Map[String, Any]] = {
     var result = ListBuffer[Map[String, Any]]()
     val searchSourceBuilder = new SearchSourceBuilder
@@ -80,6 +81,7 @@ object ElasticQueryBuilder {
     client.delete(deleteRequest, RequestOptions.DEFAULT)
   }
 
+  // Scan and scroll
   def findAll(es_index: String): List[Map[String, Any]] = {
     var result = ListBuffer[Map[String, Any]]()
     var scrollResp = transportClient.prepareSearch(es_index)

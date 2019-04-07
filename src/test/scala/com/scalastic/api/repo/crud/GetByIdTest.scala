@@ -12,4 +12,6 @@ object GetByIdTest extends App {
   val personMap = ElasticQueryBuilder.getById(PERSON_INDEX, PERSON_TYPE, "c4281022-0b2f-447d-b1c7-1e0503f78c84")
   val person3 = Person.toPerson(personMap)
   println(person3.toString)
+
+  System.exit(0)
 }

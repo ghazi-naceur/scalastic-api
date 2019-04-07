@@ -12,4 +12,6 @@ object UpdateTest extends App {
   val response = ElasticQueryBuilder.update(PERSON_INDEX, PERSON_TYPE, "c4281022-0b2f-447d-b1c7-1e0503f78c84", map)
   println(response.toString)
   println(response.status())
+
+  System.exit(0)
 }
