@@ -1,4 +1,4 @@
-package com.scalastic.api.repo.search
+package com.scalastic.api.repo.search.api
 
 import com.scalastic.api.entities.Person
 import com.scalastic.api.repo.ElasticQueryBuilder

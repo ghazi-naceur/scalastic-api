@@ -2,6 +2,7 @@ package com.scalastic.api.repo
 
 import java.util.UUID
 
+import akka.http.scaladsl.server.util.Tuple
 import com.scalastic.api.client.ElasticClient
 import org.elasticsearch.action.delete.{DeleteRequest, DeleteResponse}
 import org.elasticsearch.action.get.{GetRequest, GetResponse, MultiGetItemResponse}
@@ -13,6 +14,7 @@ import org.elasticsearch.client.{RequestOptions, RestHighLevelClient}
 import org.elasticsearch.common.unit.TimeValue
 import org.elasticsearch.common.xcontent.XContentFactory
 import org.elasticsearch.index.query.QueryBuilders
+import org.elasticsearch.index.reindex.{BulkByScrollResponse, DeleteByQueryAction}
 import org.elasticsearch.search.SearchHit
 import org.elasticsearch.search.builder.SearchSourceBuilder
 
@@ -79,6 +81,14 @@ object ElasticQueryBuilder {
   def delete(es_index: String, es_type: String, id: String): DeleteResponse = {
     val deleteRequest = new DeleteRequest(es_index, es_type, id)
     client.delete(deleteRequest, RequestOptions.DEFAULT)
+  }
+
+  def deleteByQuery(criteria: Map[String, Any], indexes: String*): BulkByScrollResponse = {
+    val query = DeleteByQueryAction.INSTANCE.newRequestBuilder(transportClient)
+    for ((k, v) <- criteria) {
+      query.filter(QueryBuilders.matchQuery(k, v))
+    }
+      query.source(indexes: _*).get()
   }
 
   // Scan and scroll

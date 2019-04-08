@@ -1,4 +1,4 @@
-package com.scalastic.api.repo.search
+package com.scalastic.api.repo.search.api
 
 import com.scalastic.api.config.PropertiesLoader.CITY_INDEX
 import com.scalastic.api.entities.City

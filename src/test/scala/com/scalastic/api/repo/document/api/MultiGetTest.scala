@@ -1,4 +1,4 @@
-package com.scalastic.api.repo.search
+package com.scalastic.api.repo.document.api
 
 import com.scalastic.api.config.PropertiesLoader.{PERSON_INDEX, PERSON_TYPE}
 import com.scalastic.api.entities.Person
