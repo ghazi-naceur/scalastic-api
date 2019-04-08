@@ -12,7 +12,7 @@ object TermQueryTest extends App {
 
   // 1- First example :
   println("1- First example :")
-  val persons = ElasticQueryBuilder.getEntitiesFromIndexUsingTermQuery(PERSON_INDEX, "lastName", "Netero")
+  val persons = ElasticQueryBuilder.getDocsWithTermQuery(PERSON_INDEX, "lastName", "Netero")
   persons.foreach(map => {
     println(Person.toPerson(map).toString)
   })
@@ -26,7 +26,7 @@ object TermQueryTest extends App {
       ElasticQueryBuilder.insert(CITY_INDEX, CITY_TYPE, city.toMap())
   println("a- :")
   // a :
-        val cities1 = ElasticQueryBuilder.getEntitiesFromIndexUsingTermQuery(CITY_INDEX, "name", "Konoha")
+        val cities1 = ElasticQueryBuilder.getDocsWithTermQuery(CITY_INDEX, "name", "Konoha")
         cities1.foreach(map => {
           println(City.toCity(map).toString)
         })
@@ -34,7 +34,7 @@ object TermQueryTest extends App {
 
   println("b- :")
   // b :
-        val cities2 = ElasticQueryBuilder.getEntitiesFromIndexUsingTermQuery(CITY_INDEX, "country", "Hidden leaf")
+        val cities2 = ElasticQueryBuilder.getDocsWithTermQuery(CITY_INDEX, "country", "Hidden leaf")
         cities2.foreach(map => {
           println(City.toCity(map).toString)
         })

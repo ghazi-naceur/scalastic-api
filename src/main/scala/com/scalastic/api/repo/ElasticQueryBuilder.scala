@@ -4,7 +4,7 @@ import java.util.UUID
 
 import com.scalastic.api.client.ElasticClient
 import org.elasticsearch.action.delete.{DeleteRequest, DeleteResponse}
-import org.elasticsearch.action.get.GetRequest
+import org.elasticsearch.action.get.{GetRequest, GetResponse, MultiGetItemResponse}
 import org.elasticsearch.action.index.{IndexRequest, IndexResponse}
 import org.elasticsearch.action.search.SearchRequest
 import org.elasticsearch.action.update.{UpdateRequest, UpdateResponse}
@@ -114,7 +114,7 @@ object ElasticQueryBuilder {
     result.toList
   }
 
-  def getEntitiesFromIndexUsingMatchQuery(es_index: String, field: String, value: String): List[Map[String, Any]] = {
+  def getDocsWithMatchQuery(es_index: String, field: String, value: String): List[Map[String, Any]] = {
     var result = ListBuffer[Map[String, Any]]()
     val searchRequest = new SearchRequest(es_index)
     val builder = new SearchSourceBuilder().query(QueryBuilders.matchQuery(field, value)).from(from).size(size)
@@ -126,7 +126,7 @@ object ElasticQueryBuilder {
     result.toList
   }
 
-  def getEntitiesFromIndexUsingTermQuery(es_index: String, field: String, value: String): List[Map[String, Any]] = {
+  def getDocsWithTermQuery(es_index: String, field: String, value: String): List[Map[String, Any]] = {
     var result = ListBuffer[Map[String, Any]]()
     val searchRequest = new SearchRequest(es_index)
     val builder = new SearchSourceBuilder().query(QueryBuilders.termQuery(field, value)).from(from).size(size)
@@ -138,7 +138,7 @@ object ElasticQueryBuilder {
     result.toList
   }
 
-  def getDocumentsFromIndexUsingPrefixQuery(es_index: String, field: String, value: String): List[Map[String, Any]] = {
+  def getDocsWithPrefixQuery(es_index: String, field: String, value: String): List[Map[String, Any]] = {
     var result = ListBuffer[Map[String, Any]]()
     val searchRequest = new SearchRequest(es_index)
     val builder = new SearchSourceBuilder().query(QueryBuilders.prefixQuery(field, value)).from(from).size(size)
@@ -149,4 +149,26 @@ object ElasticQueryBuilder {
     }
     result.toList
   }
+
+  // We consider that indices(i), types(i) and ids(i) are associated to the same entity
+  def getDocsWithMultiGet(indices: List[String], types: List[String], ids: List[String]): List[Map[String, Any]] = {
+    if (indices.length != types.length || indices.length != ids.length || types.length != ids.length) {
+      throw new IllegalArgumentException(s"Indices, types and ids must have the same size ! indices.length = ${indices.length} , types.length = ${types.length} , ids.length = ${ids.length}")
+    }
+
+    var result = ListBuffer[Map[String, Any]]()
+    val multiGetItemResponses = transportClient.prepareMultiGet()
+    for (i <- indices.indices) {
+      multiGetItemResponses.add(indices(i), types(i), ids(i))
+    }
+
+    for (itemResponse: MultiGetItemResponse <- multiGetItemResponses.get().getResponses) {
+      val response: GetResponse = itemResponse.getResponse
+      if (response.isExists) {
+        result += response.getSourceAsMap.asScala.map(kv => (kv._1, kv._2)).toMap
+      }
+    }
+    result.toList
+  }
+
 }

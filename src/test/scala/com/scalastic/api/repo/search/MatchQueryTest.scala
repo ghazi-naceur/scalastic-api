@@ -10,7 +10,7 @@ import com.scalastic.api.config.PropertiesLoader.{PERSON_INDEX}
   * Email: ghazi.ennacer@gmail.com
   */
 object MatchQueryTest extends App {
-  val persons = ElasticQueryBuilder.getEntitiesFromIndexUsingMatchQuery(PERSON_INDEX, "lastName", "Netero")
+  val persons = ElasticQueryBuilder.getDocsWithMatchQuery(PERSON_INDEX, "lastName", "Netero")
   persons.foreach(map => {
     println(Person.toPerson(map).toString)
   })

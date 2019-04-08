@@ -10,13 +10,13 @@ import com.scalastic.api.repo.ElasticQueryBuilder
   */
 object PrefixQueryTest extends App {
   println("First test :")
-  val cities = ElasticQueryBuilder.getDocumentsFromIndexUsingPrefixQuery(CITY_INDEX, "country", "som")
+  val cities = ElasticQueryBuilder.getDocsWithPrefixQuery(CITY_INDEX, "country", "som")
   cities.foreach(map => {
     println(City.toCity(map).toString)
   })
   // To search with text and keyword fields, prefixQuery would be a good solution
   println("Second test :")
-  val cities2 = ElasticQueryBuilder.getDocumentsFromIndexUsingPrefixQuery(CITY_INDEX, "prefecture", "som")
+  val cities2 = ElasticQueryBuilder.getDocsWithPrefixQuery(CITY_INDEX, "prefecture", "som")
   cities2.foreach(map => {
     println(City.toCity(map).toString)
   })
