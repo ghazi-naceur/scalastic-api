@@ -17,4 +17,6 @@ object DeleteByQueryTest extends App {
 
   val response: BulkByScrollResponse = ElasticQueryBuilder.deleteByQuery(Map("firstName" -> "Mamuro", "occupation" -> "Boxer"),"sc_persons", "persons")
   println(response.getDeleted)
+
+  System.exit(0)
 }

@@ -15,4 +15,6 @@ object MultiGetTest extends App {
   persons.foreach(person => {
     println(Person.toPerson(person).toString)
   })
+
+  System.exit(0)
 }
