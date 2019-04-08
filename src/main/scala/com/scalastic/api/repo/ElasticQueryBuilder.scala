@@ -4,6 +4,7 @@ import java.util.UUID
 
 import com.scalastic.api.client.ElasticClient
 import org.elasticsearch.action.ActionListener
+import org.elasticsearch.action.bulk.{BulkRequestBuilder, BulkResponse}
 import org.elasticsearch.action.delete.{DeleteRequest, DeleteResponse}
 import org.elasticsearch.action.get.{GetRequest, GetResponse, MultiGetItemResponse}
 import org.elasticsearch.action.index.{IndexRequest, IndexResponse}
@@ -108,6 +109,21 @@ object ElasticQueryBuilder {
           throw new Exception(e)
         }
       })
+  }
+
+  def bulk(es_indice: String, es_type: String, entities: List[Map[String, Any]]): Unit = {
+    val bulkRequest: BulkRequestBuilder = transportClient.prepareBulk()
+
+    for (i <- entities.indices) {
+      val builder = transportClient.prepareIndex(es_indice, es_type, UUID.randomUUID().toString)
+      builder.setSource(entities(i).asJava)
+      bulkRequest.add(builder)
+    }
+
+    val bulkResponse: BulkResponse = bulkRequest.get()
+    if (bulkResponse.hasFailures) {
+      // process failures by iterating through each bulk response item
+    }
   }
 
   // Scan and scroll
