@@ -15,7 +15,7 @@ import org.elasticsearch.client.{RequestOptions, RestHighLevelClient}
 import org.elasticsearch.common.unit.TimeValue
 import org.elasticsearch.common.xcontent.XContentFactory
 import org.elasticsearch.index.query.QueryBuilders
-import org.elasticsearch.index.reindex.{BulkByScrollResponse, DeleteByQueryAction}
+import org.elasticsearch.index.reindex.{BulkByScrollResponse, DeleteByQueryAction, ReindexAction}
 import org.elasticsearch.search.SearchHit
 import org.elasticsearch.search.builder.SearchSourceBuilder
 
@@ -124,6 +124,17 @@ object ElasticQueryBuilder {
     if (bulkResponse.hasFailures) {
       // process failures by iterating through each bulk response item
     }
+  }
+
+  def reindex(sourceIndex: String, destinationIndex: String, filter: Map[String, Any]): BulkByScrollResponse = {
+    //  The "destinationIndex" must be not already created, because indices in ES6 supports only 1 type.
+    val builder = ReindexAction.INSTANCE.newRequestBuilder(transportClient)
+      .source(sourceIndex)
+      .destination(destinationIndex)
+    for ((k, v) <- filter) {
+      builder.filter(QueryBuilders.matchQuery(k, v))
+    }
+      builder.get()
   }
 
   // Scan and scroll
