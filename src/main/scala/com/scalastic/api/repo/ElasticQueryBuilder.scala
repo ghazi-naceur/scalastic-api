@@ -15,7 +15,7 @@ import org.elasticsearch.client.{RequestOptions, RestHighLevelClient}
 import org.elasticsearch.common.unit.TimeValue
 import org.elasticsearch.common.xcontent.XContentFactory
 import org.elasticsearch.index.query.QueryBuilders
-import org.elasticsearch.index.reindex.{BulkByScrollResponse, DeleteByQueryAction, ReindexAction}
+import org.elasticsearch.index.reindex._
 import org.elasticsearch.search.SearchHit
 import org.elasticsearch.search.builder.SearchSourceBuilder
 
@@ -134,7 +134,7 @@ object ElasticQueryBuilder {
     for ((k, v) <- filter) {
       builder.filter(QueryBuilders.matchQuery(k, v))
     }
-      builder.get()
+    builder.get()
   }
 
   // Scan and scroll
@@ -175,6 +175,18 @@ object ElasticQueryBuilder {
     val searchRequest = new SearchRequest(es_index)
     val builder = new SearchSourceBuilder().query(QueryBuilders.matchQuery(field, value)).from(from).size(size)
     searchRequest.source(builder)
+    val response = client.search(searchRequest, RequestOptions.DEFAULT)
+    for (hit: SearchHit <- response.getHits.getHits) {
+      result += hit.getSourceAsMap.asScala.map(kv => (kv._1, kv._2)).toMap
+    }
+    result.toList
+  }
+
+  def getDocsWithMultiMatchQuery(indices: Array[String], value: String, fieldNames: String*): List[Map[String, Any]] = {
+    var result = ListBuffer[Map[String, Any]]()
+    val builder: SearchSourceBuilder = new SearchSourceBuilder().query(QueryBuilders.multiMatchQuery(value, fieldNames: _*))
+      .from(from).size(size)
+    val searchRequest = new SearchRequest(indices, builder)
     val response = client.search(searchRequest, RequestOptions.DEFAULT)
     for (hit: SearchHit <- response.getHits.getHits) {
       result += hit.getSourceAsMap.asScala.map(kv => (kv._1, kv._2)).toMap
