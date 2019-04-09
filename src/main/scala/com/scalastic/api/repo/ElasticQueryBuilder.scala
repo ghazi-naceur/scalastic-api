@@ -194,6 +194,18 @@ object ElasticQueryBuilder {
     result.toList
   }
 
+  def getDocsWithTermsQuery(indices: Array[String], field: String, values: String*): List[Map[String, Any]] = {
+    var result = ListBuffer[Map[String, Any]]()
+    val builder: SearchSourceBuilder = new SearchSourceBuilder().query(QueryBuilders.termsQuery(field, values: _*))
+      .from(from).size(size)
+    val searchRequest = new SearchRequest(indices, builder)
+    val response = client.search(searchRequest, RequestOptions.DEFAULT)
+    for (hit: SearchHit <- response.getHits.getHits) {
+      result += hit.getSourceAsMap.asScala.map(kv => (kv._1, kv._2)).toMap
+    }
+    result.toList
+  }
+
   def getDocsWithTermQuery(es_index: String, field: String, value: String): List[Map[String, Any]] = {
     var result = ListBuffer[Map[String, Any]]()
     val searchRequest = new SearchRequest(es_index)
