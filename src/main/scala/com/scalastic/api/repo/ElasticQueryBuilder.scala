@@ -14,7 +14,7 @@ import org.elasticsearch.client.transport.TransportClient
 import org.elasticsearch.client.{RequestOptions, RestHighLevelClient}
 import org.elasticsearch.common.unit.TimeValue
 import org.elasticsearch.common.xcontent.XContentFactory
-import org.elasticsearch.index.query.QueryBuilders
+import org.elasticsearch.index.query.{Operator, QueryBuilders}
 import org.elasticsearch.index.reindex._
 import org.elasticsearch.search.SearchHit
 import org.elasticsearch.search.builder.SearchSourceBuilder
@@ -222,6 +222,19 @@ object ElasticQueryBuilder {
     var result = ListBuffer[Map[String, Any]]()
     val searchRequest = new SearchRequest(es_index)
     val builder = new SearchSourceBuilder().query(QueryBuilders.commonTermsQuery(field, value)).from(from).size(size)
+    searchRequest.source(builder)
+    val response = client.search(searchRequest, RequestOptions.DEFAULT)
+    for (hit: SearchHit <- response.getHits.getHits) {
+      result += hit.getSourceAsMap.asScala.map(kv => (kv._1, kv._2)).toMap
+    }
+    result.toList
+  }
+
+  def getDocsWithQueryStringQuery(index: String, defaultField: String, defaultOperator: Operator, query: Array[String]): List[Map[String, Any]] = {
+    var result = ListBuffer[Map[String, Any]]()
+    val searchRequest = new SearchRequest(index)
+    val fieldsWithOperator = query.mkString(" " + defaultOperator.toString + " ")
+    val builder = new SearchSourceBuilder().query(QueryBuilders.queryStringQuery(fieldsWithOperator).defaultField(defaultField)).from(from).size(size)
     searchRequest.source(builder)
     val response = client.search(searchRequest, RequestOptions.DEFAULT)
     for (hit: SearchHit <- response.getHits.getHits) {
