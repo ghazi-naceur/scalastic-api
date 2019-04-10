@@ -241,6 +241,12 @@ object ElasticQueryBuilder {
     extractResult(searchRequest, builder)
   }
 
+  def getDocsWithFuzzyQuery(index: String, field: String, value: String): List[Map[String, Any]] = {
+    val searchRequest = new SearchRequest(index)
+    val builder = new SearchSourceBuilder().query(QueryBuilders.fuzzyQuery(field, value)).from(from).size(size)
+    extractResult(searchRequest, builder)
+  }
+
   private def extractResult(searchRequest: SearchRequest, builder: SearchSourceBuilder): List[Map[String, Any]] = {
     searchRequest.source(builder)
     extractResult(searchRequest)
