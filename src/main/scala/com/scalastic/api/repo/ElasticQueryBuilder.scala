@@ -299,6 +299,18 @@ object ElasticQueryBuilder {
     result.toList
   }
 
+  def getDocsWithWildcardQuery(index: String, field: String, value: String): List[Map[String, Any]] = {
+    var result = ListBuffer[Map[String, Any]]()
+    val searchRequest = new SearchRequest(index)
+    val builder = new SearchSourceBuilder().query(QueryBuilders.wildcardQuery(field, value)).from(from).size(size)
+    searchRequest.source(builder)
+    val response = client.search(searchRequest, RequestOptions.DEFAULT)
+    for (hit: SearchHit <- response.getHits.getHits) {
+      result += hit.getSourceAsMap.asScala.map(kv => (kv._1, kv._2)).toMap
+    }
+    result.toList
+  }
+
   // We consider that indices(i), types(i) and ids(i) are associated to the same entity
   def getDocsWithMultiGet(indices: List[String], types: List[String], ids: List[String]): List[Map[String, Any]] = {
     if (indices.length != types.length || indices.length != ids.length || types.length != ids.length) {
