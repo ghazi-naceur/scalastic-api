@@ -1,6 +1,6 @@
 package com.scalastic.api.repo.search.api
 
-import com.scalastic.api.entities.{City, Person}
+import com.scalastic.api.entities.City
 import com.scalastic.api.repo.ElasticQueryBuilder
 
 /**
@@ -8,7 +8,7 @@ import com.scalastic.api.repo.ElasticQueryBuilder
   * Email: ghazi.ennacer@gmail.com
   */
 object TermsQueryTest extends App {
-  private val cities: List[Map[String, Any]] = ElasticQueryBuilder.getDocsWithTermsQuery(Array("cities","other_persons"), "name", "Konoha", "some other city")
+  private val cities: List[Map[String, Any]] = ElasticQueryBuilder.getDocsWithTermsQuery(Array("cities", "other_persons"), "name", "Konoha", "some other city")
   cities.foreach(city => {
     println(City.toCity(city).toString)
   })
