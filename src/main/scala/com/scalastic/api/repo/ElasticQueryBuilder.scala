@@ -207,69 +207,38 @@ object ElasticQueryBuilder {
   }
 
   def getDocsWithTermQuery(es_index: String, field: String, value: String): List[Map[String, Any]] = {
-    var result = ListBuffer[Map[String, Any]]()
     val searchRequest = new SearchRequest(es_index)
     val builder = new SearchSourceBuilder().query(QueryBuilders.termQuery(field, value)).from(from).size(size)
-    searchRequest.source(builder)
-    val response = client.search(searchRequest, RequestOptions.DEFAULT)
-    for (hit: SearchHit <- response.getHits.getHits) {
-      result += hit.getSourceAsMap.asScala.map(kv => (kv._1, kv._2)).toMap
-    }
-    result.toList
+    extractResult(searchRequest, builder)
   }
 
   def getDocsWithCommonTermsQuery(es_index: String, field: String, value: String): List[Map[String, Any]] = {
-    var result = ListBuffer[Map[String, Any]]()
     val searchRequest = new SearchRequest(es_index)
     val builder = new SearchSourceBuilder().query(QueryBuilders.commonTermsQuery(field, value)).from(from).size(size)
-    searchRequest.source(builder)
-    val response = client.search(searchRequest, RequestOptions.DEFAULT)
-    for (hit: SearchHit <- response.getHits.getHits) {
-      result += hit.getSourceAsMap.asScala.map(kv => (kv._1, kv._2)).toMap
-    }
-    result.toList
+    extractResult(searchRequest, builder)
   }
 
   def getDocsWithQueryStringQuery(index: String, defaultField: String, defaultOperator: Operator, query: Array[String]): List[Map[String, Any]] = {
-    var result = ListBuffer[Map[String, Any]]()
     val searchRequest = new SearchRequest(index)
     val fieldsWithOperator = query.mkString(" " + defaultOperator.toString + " ")
     val builder = new SearchSourceBuilder().query(QueryBuilders.queryStringQuery(fieldsWithOperator).defaultField(defaultField)).from(from).size(size)
-    searchRequest.source(builder)
-    val response = client.search(searchRequest, RequestOptions.DEFAULT)
-    for (hit: SearchHit <- response.getHits.getHits) {
-      result += hit.getSourceAsMap.asScala.map(kv => (kv._1, kv._2)).toMap
-    }
-    result.toList
+    extractResult(searchRequest, builder)
   }
 
   def getDocsWithSimpleQueryStringQuery(index: String, defaultOperator: Operator, query: Array[String]): List[Map[String, Any]] = {
-    var result = ListBuffer[Map[String, Any]]()
     val searchRequest = new SearchRequest(index)
     val fieldsWithOperator = query.mkString(" " + defaultOperator.toString + " ")
     val builder = new SearchSourceBuilder().query(QueryBuilders.simpleQueryStringQuery(fieldsWithOperator)).from(from).size(size)
-    searchRequest.source(builder)
-    val response = client.search(searchRequest, RequestOptions.DEFAULT)
-    for (hit: SearchHit <- response.getHits.getHits) {
-      result += hit.getSourceAsMap.asScala.map(kv => (kv._1, kv._2)).toMap
-    }
-    result.toList
+    extractResult(searchRequest, builder)
   }
 
   def getDocsWithPrefixQuery(es_index: String, field: String, value: String): List[Map[String, Any]] = {
-    var result = ListBuffer[Map[String, Any]]()
     val searchRequest = new SearchRequest(es_index)
     val builder = new SearchSourceBuilder().query(QueryBuilders.prefixQuery(field, value)).from(from).size(size)
-    searchRequest.source(builder)
-    val response = client.search(searchRequest, RequestOptions.DEFAULT)
-    for (hit: SearchHit <- response.getHits.getHits) {
-      result += hit.getSourceAsMap.asScala.map(kv => (kv._1, kv._2)).toMap
-    }
-    result.toList
+    extractResult(searchRequest, builder)
   }
 
   def getDocsWithRangeQuery(index: String, field: String, lte: Option[Int], gte: Option[Int]): List[Map[String, Any]] = {
-    var result = ListBuffer[Map[String, Any]]()
     val searchRequest = new SearchRequest(index)
     val query = QueryBuilders.rangeQuery(field)
     if (lte != null) {
@@ -279,42 +248,29 @@ object ElasticQueryBuilder {
       query.gte(gte.get)
     }
     val builder = new SearchSourceBuilder().query(query).from(from).size(size)
-    searchRequest.source(builder)
-    val response = client.search(searchRequest, RequestOptions.DEFAULT)
-    for (hit: SearchHit <- response.getHits.getHits) {
-      result += hit.getSourceAsMap.asScala.map(kv => (kv._1, kv._2)).toMap
-    }
-    result.toList
+    extractResult(searchRequest, builder)
   }
 
   def getDocsWithExistsQuery(index: String, field: String): List[Map[String, Any]] = {
-    var result = ListBuffer[Map[String, Any]]()
     val searchRequest = new SearchRequest(index)
     val builder = new SearchSourceBuilder().query(QueryBuilders.existsQuery(field)).from(from).size(size)
-    searchRequest.source(builder)
-    val response = client.search(searchRequest, RequestOptions.DEFAULT)
-    for (hit: SearchHit <- response.getHits.getHits) {
-      result += hit.getSourceAsMap.asScala.map(kv => (kv._1, kv._2)).toMap
-    }
-    result.toList
+    extractResult(searchRequest, builder)
   }
 
   def getDocsWithWildcardQuery(index: String, field: String, value: String): List[Map[String, Any]] = {
-    var result = ListBuffer[Map[String, Any]]()
     val searchRequest = new SearchRequest(index)
     val builder = new SearchSourceBuilder().query(QueryBuilders.wildcardQuery(field, value)).from(from).size(size)
-    searchRequest.source(builder)
-    val response = client.search(searchRequest, RequestOptions.DEFAULT)
-    for (hit: SearchHit <- response.getHits.getHits) {
-      result += hit.getSourceAsMap.asScala.map(kv => (kv._1, kv._2)).toMap
-    }
-    result.toList
+    extractResult(searchRequest, builder)
   }
 
   def getDocsWithRegexQuery(index: String, field: String, value: String): List[Map[String, Any]] = {
-    var result = ListBuffer[Map[String, Any]]()
     val searchRequest = new SearchRequest(index)
     val builder = new SearchSourceBuilder().query(QueryBuilders.regexpQuery(field, value)).from(from).size(size)
+    extractResult(searchRequest, builder)
+  }
+
+  private def extractResult(searchRequest: SearchRequest, builder: SearchSourceBuilder): List[Map[String, Any]] = {
+    var result = ListBuffer[Map[String, Any]]()
     searchRequest.source(builder)
     val response = client.search(searchRequest, RequestOptions.DEFAULT)
     for (hit: SearchHit <- response.getHits.getHits) {

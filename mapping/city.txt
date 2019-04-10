@@ -1,0 +1,23 @@
+http://localhost:9200/cities
+{
+  "cities" : {
+    "mappings" : {
+      "city" : {
+        "properties" : {
+          "country" : {
+            "type" : "text"
+          },
+          "name" : {
+            "type" : "keyword"
+          },
+          "population" : {
+            "type" : "long"
+          },
+          "prefecture" : {
+            "type" : "keyword"
+          }
+        }
+      }
+    }
+  }
+}
