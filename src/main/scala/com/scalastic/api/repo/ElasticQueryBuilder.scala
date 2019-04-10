@@ -247,6 +247,12 @@ object ElasticQueryBuilder {
     extractResult(searchRequest, builder)
   }
 
+  def getDocsWithIdsQuery(index: String, ids: String*): List[Map[String, Any]] = {
+    val searchRequest = new SearchRequest(index)
+    val builder = new SearchSourceBuilder().query(QueryBuilders.idsQuery().addIds(ids: _*)).from(from).size(size)
+    extractResult(searchRequest, builder)
+  }
+
   private def extractResult(searchRequest: SearchRequest, builder: SearchSourceBuilder): List[Map[String, Any]] = {
     searchRequest.source(builder)
     extractResult(searchRequest)
