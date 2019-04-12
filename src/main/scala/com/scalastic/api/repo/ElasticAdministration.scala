@@ -2,6 +2,7 @@ package com.scalastic.api.repo
 
 import com.carrotsearch.hppc.cursors.ObjectObjectCursor
 import com.scalastic.api.client.ElasticClient
+import org.elasticsearch.action.admin.indices.create.CreateIndexResponse
 import org.elasticsearch.client.RestHighLevelClient
 import org.elasticsearch.client.transport.TransportClient
 import org.elasticsearch.cluster.metadata.IndexMetaData
@@ -21,5 +22,9 @@ object ElasticAdministration {
 
   def getIndices(): Iterable[ObjectObjectCursor[String, IndexMetaData]] = {
     transportClient.admin().cluster().prepareState().get().getState.getMetaData.getIndices.asScala
+  }
+
+  def createIndex(index: String): CreateIndexResponse = {
+    transportClient.admin().indices().prepareCreate(index).get()
   }
 }
