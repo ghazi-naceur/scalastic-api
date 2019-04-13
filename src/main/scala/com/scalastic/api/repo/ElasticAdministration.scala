@@ -4,6 +4,7 @@ import com.carrotsearch.hppc.cursors.ObjectObjectCursor
 import com.scalastic.api.client.ElasticClient
 import org.elasticsearch.action.admin.indices.create.CreateIndexResponse
 import org.elasticsearch.action.admin.indices.refresh.RefreshResponse
+import org.elasticsearch.action.admin.indices.settings.get.GetSettingsResponse
 import org.elasticsearch.client.RestHighLevelClient
 import org.elasticsearch.client.transport.TransportClient
 import org.elasticsearch.cluster.metadata.IndexMetaData
@@ -31,6 +32,10 @@ object ElasticAdministration {
 
   def refreshIndices(indices: String*): RefreshResponse = {
     transportClient.admin().indices().prepareRefresh(indices: _*).get()
+  }
+
+  def getSettings(indices: String*): GetSettingsResponse = {
+    transportClient.admin().indices().prepareGetSettings(indices: _*).get()
   }
 
 }
