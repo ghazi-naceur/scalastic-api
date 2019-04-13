@@ -8,8 +8,10 @@ import org.elasticsearch.action.admin.indices.settings.get.GetSettingsResponse
 import org.elasticsearch.client.RestHighLevelClient
 import org.elasticsearch.client.transport.TransportClient
 import org.elasticsearch.cluster.metadata.IndexMetaData
+import org.elasticsearch.common.xcontent.XContentType
 
 import scala.collection.JavaConverters._
+import scala.collection.mutable.ListBuffer
 
 /**
   * Created by Ghazi Naceur on 12/04/2019
@@ -38,4 +40,26 @@ object ElasticAdministration {
     transportClient.admin().indices().prepareGetSettings(indices: _*).get()
   }
 
+  def putMapping(esIndex: String, esType: String, fields: Map[String, Any]) = {
+    var props: ListBuffer[String] = ListBuffer()
+    for ((k, v) <- fields) {
+      props += "  \"" + k + "\": {" + " \"type\": \"" + v + "\"" + " }"
+    }
+    val str = props.mkString(",")
+    transportClient.admin().indices().preparePutMapping(esIndex)
+      .setType(esType)
+      .setSource("{\n" +
+        "  \"properties\": {\n" +
+        str
+        +
+        "  }\n" +
+        "}", XContentType.JSON)
+      .get()
+  }
+
+  def addMapping(esIndex: String, esType: String, field: String, typeField: String): CreateIndexResponse = {
+    val builder = transportClient.admin().indices().prepareCreate(esIndex)
+    builder.addMapping(esType, field, "type=" + typeField)
+    builder.get()
+  }
 }
