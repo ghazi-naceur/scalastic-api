@@ -2,11 +2,13 @@ package com.scalastic.api.repo
 
 import com.carrotsearch.hppc.cursors.ObjectObjectCursor
 import com.scalastic.api.client.ElasticClient
+import org.elasticsearch.action.admin.cluster.health.ClusterHealthResponse
 import org.elasticsearch.action.admin.indices.create.CreateIndexResponse
 import org.elasticsearch.action.admin.indices.refresh.RefreshResponse
 import org.elasticsearch.action.admin.indices.settings.get.GetSettingsResponse
 import org.elasticsearch.client.RestHighLevelClient
 import org.elasticsearch.client.transport.TransportClient
+import org.elasticsearch.cluster.health.ClusterIndexHealth
 import org.elasticsearch.cluster.metadata.IndexMetaData
 import org.elasticsearch.common.xcontent.XContentType
 
@@ -61,5 +63,14 @@ object ElasticAdministration {
     val builder = transportClient.admin().indices().prepareCreate(esIndex)
     builder.addMapping(esType, field, "type=" + typeField)
     builder.get()
+  }
+
+  def getHealth(): Iterable[ClusterIndexHealth] = {
+    val healths: ClusterHealthResponse = transportClient.admin().cluster().prepareHealth().get()
+    healths.getIndices.values().asScala
+  }
+
+  def getClusterSettings(): ClusterHealthResponse = {
+    transportClient.admin().cluster().prepareHealth().get()
   }
 }
