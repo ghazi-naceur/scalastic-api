@@ -73,4 +73,16 @@ object ElasticAdministration {
   def getClusterSettings(): ClusterHealthResponse = {
     transportClient.admin().cluster().prepareHealth().get()
   }
+
+  def getYellowStatus(indices: String*): ClusterHealthResponse = {
+    transportClient.admin().cluster().prepareHealth(indices: _*)
+      .setWaitForYellowStatus()
+      .get()
+  }
+
+  def getGreenStatus(indices: String*): ClusterHealthResponse = {
+    transportClient.admin().cluster().prepareHealth(indices: _*)
+      .setWaitForGreenStatus()
+      .get()
+  }
 }
