@@ -68,6 +68,17 @@ object ElasticCompoundQueryBuilder {
     extractResult(searchRequest, builder)
   }
 
+  def getDocsWithDisMaxQuery(index: String, searchCriteria: Map[String, Any]): List[Map[String, Any]] = {
+    val searchRequest = new SearchRequest(index)
+    val query = QueryBuilders.disMaxQuery()
+    for ((k, v) <- searchCriteria) {
+      query.add(QueryBuilders.termQuery(k, v))
+    }
+    query.boost(1.2f).tieBreaker(0.7f)
+    val builder = new SearchSourceBuilder().query(query).from(from).size(size)
+    extractResult(searchRequest, builder)
+  }
+
   private def extractResult(searchRequest: SearchRequest, builder: SearchSourceBuilder): List[Map[String, Any]] = {
     searchRequest.source(builder)
     extractResult(searchRequest)
