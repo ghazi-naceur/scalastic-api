@@ -2,7 +2,6 @@ package com.scalastic.api.repo
 
 import com.scalastic.api.client.ElasticClient
 import org.elasticsearch.action.search.SearchRequest
-import org.elasticsearch.client.transport.TransportClient
 import org.elasticsearch.client.{RequestOptions, RestHighLevelClient}
 import org.elasticsearch.index.query.QueryBuilders
 import org.elasticsearch.search.SearchHit
@@ -75,6 +74,14 @@ object ElasticCompoundQueryBuilder {
       query.add(QueryBuilders.termQuery(k, v))
     }
     query.boost(1.2f).tieBreaker(0.7f)
+    val builder = new SearchSourceBuilder().query(query).from(from).size(size)
+    extractResult(searchRequest, builder)
+  }
+
+  def getDocsWithBoostingQuery(index: String, positiveField: String, positiveValue: String, negativeField: String, negativeValue: String): List[Map[String, Any]] = {
+    val searchRequest = new SearchRequest(index)
+    val query = QueryBuilders.boostingQuery(QueryBuilders.termQuery(positiveField, positiveValue), QueryBuilders.termQuery(negativeField, negativeValue))
+    query.negativeBoost(0.2f)
     val builder = new SearchSourceBuilder().query(query).from(from).size(size)
     extractResult(searchRequest, builder)
   }
