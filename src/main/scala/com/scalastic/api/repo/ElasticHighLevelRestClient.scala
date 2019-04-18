@@ -22,4 +22,40 @@ object ElasticHighLevelRestClient {
     transportClient.admin.indices.getIndex(new GetIndexRequest).actionGet.getIndices.toList
   }
 
+  def createIndex(index: String): Unit = {
+    val listener = new ActionListener[CreateIndexResponse]() {
+      override def onResponse(createIndexResponse: CreateIndexResponse): Unit = {
+        println(s"The index ${createIndexResponse.index} is created ..")
+      }
+
+      override def onFailure(e: Exception): Unit = {
+        println(s"An error occurred when trying to create index : $e ")
+      }
+    }
+
+    if (getIndicesList.contains(index)) {
+      println(s"This index $index is already created.")
+    }
+    else {
+      val request = new CreateIndexRequest(index)
+      val indices = transportClient.admin.indices
+      indices.create(request, listener)
+    }
+  }
+
+  def createIndex(esIndex: String, esType: String, mapping: String): Unit = {
+    val listener = new ActionListener[CreateIndexResponse]() {
+      override def onResponse(createIndexResponse: CreateIndexResponse): Unit = {
+        println(s"The index ${createIndexResponse.index} is created ..")
+      }
+
+      override def onFailure(e: Exception): Unit = {
+        println(s"An error occurred when trying to create index : $e ")
+      }
+    }
+    val request = new CreateIndexRequest(esIndex)
+    val indices = transportClient.admin.indices
+    request.mapping(esType, mapping, XContentType.JSON)
+    indices.create(request, listener)
+  }
 }
