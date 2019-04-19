@@ -14,7 +14,7 @@ import org.elasticsearch.client.transport.TransportClient
 import org.elasticsearch.client.{RequestOptions, RestHighLevelClient}
 import org.elasticsearch.common.unit.TimeValue
 import org.elasticsearch.common.xcontent.XContentFactory
-import org.elasticsearch.index.query.{Operator, QueryBuilders}
+import org.elasticsearch.index.query.{MoreLikeThisQueryBuilder, Operator, QueryBuilders}
 import org.elasticsearch.index.reindex._
 import org.elasticsearch.search.SearchHit
 import org.elasticsearch.search.builder.SearchSourceBuilder
@@ -207,6 +207,13 @@ object ElasticQueryBuilder {
   def getDocsWithPrefixQuery(index: String, field: String, value: String): List[Map[String, Any]] = {
     val searchRequest = new SearchRequest(index)
     val builder = new SearchSourceBuilder().query(QueryBuilders.prefixQuery(field, value)).from(from).size(size)
+    extractResult(searchRequest, builder)
+  }
+
+  def getDocsWithMoreLikeThisQuery(index: String, fields: Array[String], likeTexts: Array[String], likeItems: Array[MoreLikeThisQueryBuilder.Item]): List[Map[String, Any]] = {
+    val searchRequest = new SearchRequest(index)
+    val builder = new SearchSourceBuilder().query(QueryBuilders.moreLikeThisQuery(fields, likeTexts, likeItems).minTermFreq(1)
+      .maxQueryTerms(12)).from(from).size(size)
     extractResult(searchRequest, builder)
   }
 
