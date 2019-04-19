@@ -6,7 +6,9 @@ import com.scalastic.api.client.ElasticClient
 import org.elasticsearch.action.ActionListener
 import org.elasticsearch.action.admin.indices.create.{CreateIndexRequest, CreateIndexResponse}
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest
+import org.elasticsearch.action.admin.indices.exists.indices.{IndicesExistsRequest, IndicesExistsResponse}
 import org.elasticsearch.action.admin.indices.get.GetIndexRequest
+import org.elasticsearch.action.admin.indices.get.GetIndexRequest.Feature
 import org.elasticsearch.action.support.master.AcknowledgedResponse
 import org.elasticsearch.client.{RequestOptions, RestHighLevelClient}
 import org.elasticsearch.client.transport.TransportClient
@@ -79,5 +81,19 @@ object ElasticHighLevelRestClient {
     val request = new DeleteIndexRequest(index)
     request.timeout(TimeValue.timeValueMinutes(2))
     transportClient.admin().indices().delete(request, listener)
+  }
+
+  def indicesExists(indices: String*) = {
+    val listener = new ActionListener[IndicesExistsResponse]() {
+      override def onResponse(response: IndicesExistsResponse) {
+        println("The indices exist ? : " + response.isExists)
+      }
+
+      override def onFailure(e: Exception) {
+        println("The indices do not exist.")
+      }
+    }
+    val request = new IndicesExistsRequest(indices: _*)
+    transportClient.admin().indices().exists(request, listener)
   }
 }
