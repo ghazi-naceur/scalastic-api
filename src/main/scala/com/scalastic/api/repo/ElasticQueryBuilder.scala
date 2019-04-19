@@ -28,10 +28,10 @@ import scala.collection.mutable.ListBuffer
   */
 object ElasticQueryBuilder {
 
-  val client: RestHighLevelClient = ElasticClient.client
-  val transportClient: TransportClient = ElasticClient.transportClient
-  val from = 0
-  val size = 100
+  private val client: RestHighLevelClient = ElasticClient.client
+  private val transportClient: TransportClient = ElasticClient.transportClient
+  private val from = 0
+  private val size = 100
 
   def insert(esIndex: String, esType: String, entity: Map[String, Any]): IndexResponse = {
     val request = new IndexRequest(esIndex, esType, UUID.randomUUID().toString)

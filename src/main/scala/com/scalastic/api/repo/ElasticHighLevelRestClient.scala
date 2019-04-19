@@ -5,9 +5,12 @@ import java.util.List
 import com.scalastic.api.client.ElasticClient
 import org.elasticsearch.action.ActionListener
 import org.elasticsearch.action.admin.indices.create.{CreateIndexRequest, CreateIndexResponse}
+import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest
 import org.elasticsearch.action.admin.indices.get.GetIndexRequest
-import org.elasticsearch.client.RestHighLevelClient
+import org.elasticsearch.action.support.master.AcknowledgedResponse
+import org.elasticsearch.client.{RequestOptions, RestHighLevelClient}
 import org.elasticsearch.client.transport.TransportClient
+import org.elasticsearch.common.unit.TimeValue
 import org.elasticsearch.common.xcontent.XContentType
 
 /**
@@ -57,5 +60,24 @@ object ElasticHighLevelRestClient {
     val indices = transportClient.admin.indices
     request.mapping(esType, mapping, XContentType.JSON)
     indices.create(request, listener)
+  }
+
+  def deleteIndex(index: String): Unit = {
+    val listener = new ActionListener[AcknowledgedResponse]() {
+        override def onResponse(deleteIndexResponse: AcknowledgedResponse) {
+          if (deleteIndexResponse.isAcknowledged){
+            println("The index is deleted")
+          } else {
+            println("The index is not deleted")
+          }
+        }
+
+        override def onFailure(e: Exception) = {
+          println(s"An error occurred when trying to delete index : $e ")
+        }
+      }
+    val request = new DeleteIndexRequest(index)
+    request.timeout(TimeValue.timeValueMinutes(2))
+    transportClient.admin().indices().delete(request, listener)
   }
 }
