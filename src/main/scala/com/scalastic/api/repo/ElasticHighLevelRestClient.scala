@@ -7,6 +7,7 @@ import org.elasticsearch.action.admin.indices.create.CreateIndexRequest
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest
 import org.elasticsearch.action.admin.indices.get.GetIndexRequest
 import org.elasticsearch.action.admin.indices.open.{OpenIndexRequest, OpenIndexResponse}
+import org.elasticsearch.action.admin.indices.refresh.{RefreshRequest, RefreshResponse}
 import org.elasticsearch.action.admin.indices.shrink.{ResizeRequest, ResizeResponse}
 import org.elasticsearch.action.support.master.AcknowledgedResponse
 import org.elasticsearch.client.transport.TransportClient
@@ -86,7 +87,30 @@ object ElasticHighLevelRestClient {
 
   def shrinkIndex(targetIndex: String, sourceIndex: String): ResizeResponse = {
     val request = new ResizeRequest(targetIndex, sourceIndex)
-//    request.setCopySettings(true)
+    //    request.setCopySettings(true)
     client.indices().shrink(request, RequestOptions.DEFAULT)
+  }
+
+  /** OPEN BUG : https://github.com/elastic/elasticsearch/issues/29652#
+    *
+    * @param targetIndex  The target index
+    * @param sourceIndex  The source index
+    * @param shardsNumber : The requested number of primary shards in the target index must be a
+    *                     factor of the number of shards in the source index. For example an index
+    *                     with 8 primary shards can be shrunk into 4, 2 or 1 primary shards or an
+    *                     index with 15 primary shards can be shrunk into 5, 3 or 1.
+    * @return ResizeResponse
+    */
+  //  def splitIndex(targetIndex: String, sourceIndex: String, shardsNumber: Int): ResizeResponse = {
+  //    val request = new ResizeRequest(targetIndex, sourceIndex)
+  //    request.setResizeType(ResizeType.SPLIT)
+  //    request.getTargetIndexRequest.settings(Settings.builder()
+  //      .put("index.number_of_shards", shardsNumber))
+  //    client.indices().split(request, RequestOptions.DEFAULT)
+  //  }
+
+  def refreshIndex(indices: String*): RefreshResponse = {
+    val request = new RefreshRequest(indices: _*)
+    client.indices().refresh(request, RequestOptions.DEFAULT)
   }
 }
