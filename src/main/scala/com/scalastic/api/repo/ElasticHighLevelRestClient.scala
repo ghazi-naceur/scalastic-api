@@ -2,6 +2,7 @@ package com.scalastic.api.repo
 
 import com.scalastic.api.client.ElasticClient
 import org.elasticsearch.action.admin.cluster.health.ClusterHealthRequest
+import org.elasticsearch.action.admin.indices.cache.clear.{ClearIndicesCacheRequest, ClearIndicesCacheResponse}
 import org.elasticsearch.action.admin.indices.close.CloseIndexRequest
 import org.elasticsearch.action.admin.indices.create.CreateIndexRequest
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest
@@ -123,5 +124,11 @@ object ElasticHighLevelRestClient {
   def syncedFlushIndices(indices: String*): SyncedFlushResponse = {
     val request = new SyncedFlushRequest(indices: _*)
     client.indices().flushSynced(request, RequestOptions.DEFAULT)
+  }
+
+  // indices should not be "read-only"
+  def clearCache(indices: String*): ClearIndicesCacheResponse = {
+    val request = new ClearIndicesCacheRequest(indices: _*)
+    client.indices().clearCache(request, RequestOptions.DEFAULT)
   }
 }
