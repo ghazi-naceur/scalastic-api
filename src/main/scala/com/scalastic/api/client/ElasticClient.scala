@@ -4,7 +4,7 @@ import java.net.InetAddress
 
 import com.scalastic.api.config.PropertiesLoader
 import org.apache.http.HttpHost
-import org.elasticsearch.client.{RestClient, RestHighLevelClient}
+import org.elasticsearch.client.{RestClient, RestClientBuilder, RestHighLevelClient}
 import org.elasticsearch.client.transport.TransportClient
 import org.elasticsearch.common.settings.Settings
 import org.elasticsearch.common.transport.TransportAddress
@@ -18,7 +18,8 @@ object ElasticClient {
   val host: String = PropertiesLoader.HOST
   val port: Int = PropertiesLoader.PORT
   val httpPort: Int = PropertiesLoader.HTTP_PORT
-  val client = new RestHighLevelClient(RestClient.builder(new HttpHost(host, port)))
+  val lowLevelClient: RestClientBuilder = RestClient.builder(new HttpHost(host, port))
+  val client = new RestHighLevelClient(lowLevelClient)
   def transportClient: TransportClient = {
     val settings = Settings.builder()
       .put("cluster.name", "elasticsearch").build()

@@ -7,8 +7,12 @@ import com.scalastic.api.repo.ElasticHighLevelRestClient
   * Email: ghazi.ennacer@gmail.com
   */
 object CreateIndexTest extends App {
-  ElasticHighLevelRestClient.createIndex("scala_index")
+  // Without explicit mapping
+  ElasticHighLevelRestClient.createIndex("scala_index_2")
 
+  // With explicit mapping
   val mapping = "{ \"properties\" : {   \"field_one\" : { \"type\" : \"text\"},  \"field_two\" : { \"type\" : \"text\"},  \"field_three\" : { \"type\" : \"text\" }, \"field_four\" : { \"type\" : \"text\" } }}"
-  ElasticHighLevelRestClient.createIndex("new_scala_index", "new_scala_type", mapping)
+  ElasticHighLevelRestClient.createIndex("new_scala_index_3", "new_scala_type", mapping)
+
+  System.exit(0)
 }

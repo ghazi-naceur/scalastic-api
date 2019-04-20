@@ -1,19 +1,20 @@
 package com.scalastic.api.repo
 
-import java.util.List
-
 import com.scalastic.api.client.ElasticClient
-import org.elasticsearch.action.ActionListener
-import org.elasticsearch.action.admin.indices.create.{CreateIndexRequest, CreateIndexResponse}
+import org.elasticsearch.action.admin.cluster.health.ClusterHealthRequest
+import org.elasticsearch.action.admin.indices.close.CloseIndexRequest
+import org.elasticsearch.action.admin.indices.create.CreateIndexRequest
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest
-import org.elasticsearch.action.admin.indices.exists.indices.{IndicesExistsRequest, IndicesExistsResponse}
 import org.elasticsearch.action.admin.indices.get.GetIndexRequest
-import org.elasticsearch.action.admin.indices.get.GetIndexRequest.Feature
+import org.elasticsearch.action.admin.indices.open.{OpenIndexRequest, OpenIndexResponse}
 import org.elasticsearch.action.support.master.AcknowledgedResponse
-import org.elasticsearch.client.{RequestOptions, RestHighLevelClient}
 import org.elasticsearch.client.transport.TransportClient
+import org.elasticsearch.client.{RequestOptions, RestClientBuilder, RestHighLevelClient}
 import org.elasticsearch.common.unit.TimeValue
 import org.elasticsearch.common.xcontent.XContentType
+
+import scala.collection.JavaConverters._
+
 
 /**
   * Created by Ghazi Naceur on 18/04/2019
@@ -22,78 +23,56 @@ import org.elasticsearch.common.xcontent.XContentType
 object ElasticHighLevelRestClient {
 
   private val transportClient: TransportClient = ElasticClient.transportClient
+  private val client: RestHighLevelClient = ElasticClient.client
+  private val llc: RestClientBuilder = ElasticClient.lowLevelClient
 
-  def getIndicesList: scala.List[String] = {
-    transportClient.admin.indices.getIndex(new GetIndexRequest).actionGet.getIndices.toList
+  def getIndicesList: List[String] = {
+    val request = new ClusterHealthRequest
+    val response = client.cluster.health(request, RequestOptions.DEFAULT)
+    response.getIndices.keySet().asScala.toList
   }
 
   def createIndex(index: String): Unit = {
-    val listener = new ActionListener[CreateIndexResponse]() {
-      override def onResponse(createIndexResponse: CreateIndexResponse): Unit = {
-        println(s"The index ${createIndexResponse.index} is created ..")
-      }
-
-      override def onFailure(e: Exception): Unit = {
-        println(s"An error occurred when trying to create index : $e ")
-      }
-    }
-
-    if (getIndicesList.contains(index)) {
+    if (indicesExists(index)) {
       println(s"This index $index is already created.")
     }
     else {
       val request = new CreateIndexRequest(index)
-      val indices = transportClient.admin.indices
-      indices.create(request, listener)
+      val indices = client.indices
+      indices.create(request, RequestOptions.DEFAULT)
     }
   }
 
   def createIndex(esIndex: String, esType: String, mapping: String): Unit = {
-    val listener = new ActionListener[CreateIndexResponse]() {
-      override def onResponse(createIndexResponse: CreateIndexResponse): Unit = {
-        println(s"The index ${createIndexResponse.index} is created ..")
-      }
-
-      override def onFailure(e: Exception): Unit = {
-        println(s"An error occurred when trying to create index : $e ")
-      }
+    if (!indicesExists(esIndex)) {
+      val request = new CreateIndexRequest(esIndex)
+      val indices = client.indices
+      request.mapping(esType, mapping, XContentType.JSON)
+      indices.create(request, RequestOptions.DEFAULT)
+    } else {
+      println(s"This index $esIndex is already created.")
     }
-    val request = new CreateIndexRequest(esIndex)
-    val indices = transportClient.admin.indices
-    request.mapping(esType, mapping, XContentType.JSON)
-    indices.create(request, listener)
   }
 
   def deleteIndex(index: String): Unit = {
-    val listener = new ActionListener[AcknowledgedResponse]() {
-        override def onResponse(deleteIndexResponse: AcknowledgedResponse) {
-          if (deleteIndexResponse.isAcknowledged){
-            println("The index is deleted")
-          } else {
-            println("The index is not deleted")
-          }
-        }
-
-        override def onFailure(e: Exception) = {
-          println(s"An error occurred when trying to delete index : $e ")
-        }
-      }
     val request = new DeleteIndexRequest(index)
     request.timeout(TimeValue.timeValueMinutes(2))
-    transportClient.admin().indices().delete(request, listener)
+    client.indices().delete(request, RequestOptions.DEFAULT)
   }
 
-  def indicesExists(indices: String*) = {
-    val listener = new ActionListener[IndicesExistsResponse]() {
-      override def onResponse(response: IndicesExistsResponse) {
-        println("The indices exist ? : " + response.isExists)
-      }
+  def indicesExists(indices: String*): Boolean = {
+    val request = new GetIndexRequest()
+    request.indices(indices: _*)
+    client.indices().exists(request, RequestOptions.DEFAULT)
+  }
 
-      override def onFailure(e: Exception) {
-        println("The indices do not exist.")
-      }
-    }
-    val request = new IndicesExistsRequest(indices: _*)
-    transportClient.admin().indices().exists(request, listener)
+  def openIndices(indices: String*): OpenIndexResponse = {
+    val request = new OpenIndexRequest(indices: _*)
+    client.indices.open(request, RequestOptions.DEFAULT)
+  }
+
+  def closeIndices(indices: String*): AcknowledgedResponse = {
+    val request = new CloseIndexRequest(indices: _*)
+    client.indices.close(request, RequestOptions.DEFAULT)
   }
 }
