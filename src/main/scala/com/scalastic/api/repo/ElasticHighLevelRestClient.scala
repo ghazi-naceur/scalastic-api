@@ -7,9 +7,11 @@ import org.elasticsearch.action.admin.indices.create.CreateIndexRequest
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest
 import org.elasticsearch.action.admin.indices.get.GetIndexRequest
 import org.elasticsearch.action.admin.indices.open.{OpenIndexRequest, OpenIndexResponse}
+import org.elasticsearch.action.admin.indices.shrink.{ResizeRequest, ResizeResponse}
 import org.elasticsearch.action.support.master.AcknowledgedResponse
 import org.elasticsearch.client.transport.TransportClient
 import org.elasticsearch.client.{RequestOptions, RestClientBuilder, RestHighLevelClient}
+import org.elasticsearch.common.settings.Settings
 import org.elasticsearch.common.unit.TimeValue
 import org.elasticsearch.common.xcontent.XContentType
 
@@ -32,20 +34,26 @@ object ElasticHighLevelRestClient {
     response.getIndices.keySet().asScala.toList
   }
 
-  def createIndex(index: String): Unit = {
+  def createIndex(index: String, settings: Settings.Builder): Unit = {
     if (indicesExists(index)) {
       println(s"This index $index is already created.")
     }
     else {
       val request = new CreateIndexRequest(index)
+      if (settings != null) {
+        request.settings(settings)
+      }
       val indices = client.indices
       indices.create(request, RequestOptions.DEFAULT)
     }
   }
 
-  def createIndex(esIndex: String, esType: String, mapping: String): Unit = {
+  def createIndex(esIndex: String, esType: String, settings: Settings.Builder, mapping: String): Unit = {
     if (!indicesExists(esIndex)) {
       val request = new CreateIndexRequest(esIndex)
+      if (settings != null) {
+        request.settings(settings)
+      }
       val indices = client.indices
       request.mapping(esType, mapping, XContentType.JSON)
       indices.create(request, RequestOptions.DEFAULT)
@@ -74,5 +82,11 @@ object ElasticHighLevelRestClient {
   def closeIndices(indices: String*): AcknowledgedResponse = {
     val request = new CloseIndexRequest(indices: _*)
     client.indices.close(request, RequestOptions.DEFAULT)
+  }
+
+  def shrinkIndex(targetIndex: String, sourceIndex: String): ResizeResponse = {
+    val request = new ResizeRequest(targetIndex, sourceIndex)
+//    request.setCopySettings(true)
+    client.indices().shrink(request, RequestOptions.DEFAULT)
   }
 }
