@@ -5,6 +5,7 @@ import org.elasticsearch.action.admin.cluster.health.ClusterHealthRequest
 import org.elasticsearch.action.admin.indices.close.CloseIndexRequest
 import org.elasticsearch.action.admin.indices.create.CreateIndexRequest
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest
+import org.elasticsearch.action.admin.indices.flush.{FlushRequest, FlushResponse}
 import org.elasticsearch.action.admin.indices.get.GetIndexRequest
 import org.elasticsearch.action.admin.indices.open.{OpenIndexRequest, OpenIndexResponse}
 import org.elasticsearch.action.admin.indices.refresh.{RefreshRequest, RefreshResponse}
@@ -109,8 +110,13 @@ object ElasticHighLevelRestClient {
   //    client.indices().split(request, RequestOptions.DEFAULT)
   //  }
 
-  def refreshIndex(indices: String*): RefreshResponse = {
+  def refreshIndices(indices: String*): RefreshResponse = {
     val request = new RefreshRequest(indices: _*)
     client.indices().refresh(request, RequestOptions.DEFAULT)
+  }
+
+  def flushIndices(indices: String*): FlushResponse = {
+    val request = new FlushRequest(indices: _*)
+    client.indices().flush(request, RequestOptions.DEFAULT)
   }
 }
