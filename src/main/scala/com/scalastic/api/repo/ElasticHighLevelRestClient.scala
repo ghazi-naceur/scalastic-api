@@ -7,6 +7,7 @@ import org.elasticsearch.action.admin.indices.close.CloseIndexRequest
 import org.elasticsearch.action.admin.indices.create.CreateIndexRequest
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest
 import org.elasticsearch.action.admin.indices.flush.{FlushRequest, FlushResponse, SyncedFlushRequest}
+import org.elasticsearch.action.admin.indices.forcemerge.{ForceMergeRequest, ForceMergeResponse}
 import org.elasticsearch.action.admin.indices.get.GetIndexRequest
 import org.elasticsearch.action.admin.indices.open.{OpenIndexRequest, OpenIndexResponse}
 import org.elasticsearch.action.admin.indices.refresh.{RefreshRequest, RefreshResponse}
@@ -130,5 +131,11 @@ object ElasticHighLevelRestClient {
   def clearCache(indices: String*): ClearIndicesCacheResponse = {
     val request = new ClearIndicesCacheRequest(indices: _*)
     client.indices().clearCache(request, RequestOptions.DEFAULT)
+  }
+
+  // indices should not be "read-only"
+  def forceMerge(indices: String*): ForceMergeResponse = {
+    val request = new ForceMergeRequest(indices: _*)
+    client.indices().forcemerge(request, RequestOptions.DEFAULT)
   }
 }
