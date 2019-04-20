@@ -5,14 +5,14 @@ import org.elasticsearch.action.admin.cluster.health.ClusterHealthRequest
 import org.elasticsearch.action.admin.indices.close.CloseIndexRequest
 import org.elasticsearch.action.admin.indices.create.CreateIndexRequest
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest
-import org.elasticsearch.action.admin.indices.flush.{FlushRequest, FlushResponse}
+import org.elasticsearch.action.admin.indices.flush.{FlushRequest, FlushResponse, SyncedFlushRequest}
 import org.elasticsearch.action.admin.indices.get.GetIndexRequest
 import org.elasticsearch.action.admin.indices.open.{OpenIndexRequest, OpenIndexResponse}
 import org.elasticsearch.action.admin.indices.refresh.{RefreshRequest, RefreshResponse}
 import org.elasticsearch.action.admin.indices.shrink.{ResizeRequest, ResizeResponse}
 import org.elasticsearch.action.support.master.AcknowledgedResponse
 import org.elasticsearch.client.transport.TransportClient
-import org.elasticsearch.client.{RequestOptions, RestClientBuilder, RestHighLevelClient}
+import org.elasticsearch.client.{RequestOptions, RestClientBuilder, RestHighLevelClient, SyncedFlushResponse}
 import org.elasticsearch.common.settings.Settings
 import org.elasticsearch.common.unit.TimeValue
 import org.elasticsearch.common.xcontent.XContentType
@@ -118,5 +118,10 @@ object ElasticHighLevelRestClient {
   def flushIndices(indices: String*): FlushResponse = {
     val request = new FlushRequest(indices: _*)
     client.indices().flush(request, RequestOptions.DEFAULT)
+  }
+
+  def syncedFlushIndices(indices: String*): SyncedFlushResponse = {
+    val request = new SyncedFlushRequest(indices: _*)
+    client.indices().flushSynced(request, RequestOptions.DEFAULT)
   }
 }
