@@ -12,7 +12,7 @@ import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest
 import org.elasticsearch.action.admin.indices.flush.{FlushRequest, FlushResponse, SyncedFlushRequest}
 import org.elasticsearch.action.admin.indices.forcemerge.{ForceMergeRequest, ForceMergeResponse}
 import org.elasticsearch.action.admin.indices.get.GetIndexRequest
-import org.elasticsearch.action.admin.indices.mapping.get.{GetMappingsRequest, GetMappingsResponse}
+import org.elasticsearch.action.admin.indices.mapping.get.{GetFieldMappingsRequest, GetFieldMappingsResponse, GetMappingsRequest, GetMappingsResponse}
 import org.elasticsearch.action.admin.indices.mapping.put.PutMappingRequest
 import org.elasticsearch.action.admin.indices.open.{OpenIndexRequest, OpenIndexResponse}
 import org.elasticsearch.action.admin.indices.refresh.{RefreshRequest, RefreshResponse}
@@ -171,5 +171,13 @@ object ElasticHighLevelRestClient {
     request.indices(esIndex)
     request.types(esType)
     client.indices().getMapping(request, RequestOptions.DEFAULT)
+  }
+
+  def getFieldMapping(esIndex: String, esType: String, fields: String*): GetFieldMappingsResponse = {
+    val request = new GetFieldMappingsRequest()
+    request.indices(esIndex)
+    request.types(esType)
+    request.fields(fields: _*)
+    client.indices().getFieldMapping(request, RequestOptions.DEFAULT)
   }
 }
