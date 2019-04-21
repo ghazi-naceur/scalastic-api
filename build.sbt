@@ -21,4 +21,6 @@ libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-http-xml"        % akkaHttpVersion,
   "com.typesafe.akka" %% "akka-stream"          % akkaVersion,
   "com.typesafe.akka" %% "akka-actor" % akkaVersion,
+  "com.typesafe.play" %% "play" % "2.6.11",
+  "com.typesafe" % "config" % "1.3.2"
 )
