@@ -12,6 +12,7 @@ import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest
 import org.elasticsearch.action.admin.indices.flush.{FlushRequest, FlushResponse, SyncedFlushRequest}
 import org.elasticsearch.action.admin.indices.forcemerge.{ForceMergeRequest, ForceMergeResponse}
 import org.elasticsearch.action.admin.indices.get.GetIndexRequest
+import org.elasticsearch.action.admin.indices.mapping.put.PutMappingRequest
 import org.elasticsearch.action.admin.indices.open.{OpenIndexRequest, OpenIndexResponse}
 import org.elasticsearch.action.admin.indices.refresh.{RefreshRequest, RefreshResponse}
 import org.elasticsearch.action.admin.indices.rollover.{RolloverRequest, RolloverResponse}
@@ -156,4 +157,12 @@ object ElasticHighLevelRestClient {
       .put("index.number_of_shards", shardsNumber))
     client.indices().rollover(request, RequestOptions.DEFAULT)
   }
+
+  def putMapping(esIndex: String, esType: String, mapping: String): AcknowledgedResponse = {
+    val request = new PutMappingRequest(esIndex)
+    request.`type`(esType)
+    request.source(mapping, XContentType.JSON)
+    client.indices().putMapping(request, RequestOptions.DEFAULT)
+  }
+
 }
