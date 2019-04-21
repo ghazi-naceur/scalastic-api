@@ -1,7 +1,10 @@
 package com.scalastic.api.repo
 
+import java.util.concurrent.TimeUnit
+
 import com.scalastic.api.client.ElasticClient
 import org.elasticsearch.action.admin.cluster.health.ClusterHealthRequest
+import org.elasticsearch.action.admin.indices.alias.Alias
 import org.elasticsearch.action.admin.indices.cache.clear.{ClearIndicesCacheRequest, ClearIndicesCacheResponse}
 import org.elasticsearch.action.admin.indices.close.CloseIndexRequest
 import org.elasticsearch.action.admin.indices.create.CreateIndexRequest
@@ -11,12 +14,13 @@ import org.elasticsearch.action.admin.indices.forcemerge.{ForceMergeRequest, For
 import org.elasticsearch.action.admin.indices.get.GetIndexRequest
 import org.elasticsearch.action.admin.indices.open.{OpenIndexRequest, OpenIndexResponse}
 import org.elasticsearch.action.admin.indices.refresh.{RefreshRequest, RefreshResponse}
+import org.elasticsearch.action.admin.indices.rollover.{RolloverRequest, RolloverResponse}
 import org.elasticsearch.action.admin.indices.shrink.{ResizeRequest, ResizeResponse}
 import org.elasticsearch.action.support.master.AcknowledgedResponse
 import org.elasticsearch.client.transport.TransportClient
 import org.elasticsearch.client.{RequestOptions, RestClientBuilder, RestHighLevelClient, SyncedFlushResponse}
 import org.elasticsearch.common.settings.Settings
-import org.elasticsearch.common.unit.TimeValue
+import org.elasticsearch.common.unit.{ByteSizeUnit, ByteSizeValue, TimeValue}
 import org.elasticsearch.common.xcontent.XContentType
 
 import scala.collection.JavaConverters._
@@ -38,7 +42,7 @@ object ElasticHighLevelRestClient {
     response.getIndices.keySet().asScala.toList
   }
 
-  def createIndex(index: String, settings: Settings.Builder): Unit = {
+  def createIndex(index: String, alias: String, settings: Settings.Builder): Unit = {
     if (indicesExists(index)) {
       println(s"This index $index is already created.")
     }
@@ -46,6 +50,9 @@ object ElasticHighLevelRestClient {
       val request = new CreateIndexRequest(index)
       if (settings != null) {
         request.settings(settings)
+      }
+      if (alias != null) {
+        request.alias(new Alias(alias))
       }
       val indices = client.indices
       indices.create(request, RequestOptions.DEFAULT)
@@ -137,5 +144,16 @@ object ElasticHighLevelRestClient {
   def forceMerge(indices: String*): ForceMergeResponse = {
     val request = new ForceMergeRequest(indices: _*)
     client.indices().forcemerge(request, RequestOptions.DEFAULT)
+  }
+
+  // alias should be an actual alias, not an index
+  def rollover(alias: String, newIndexName: String, shardsNumber: Int): RolloverResponse = {
+    val request = new RolloverRequest(alias, newIndexName)
+    request.addMaxIndexAgeCondition(new TimeValue(7, TimeUnit.DAYS))
+    request.addMaxIndexDocsCondition(500)
+    request.addMaxIndexSizeCondition(new ByteSizeValue(5, ByteSizeUnit.GB))
+    request.getCreateIndexRequest.settings(Settings.builder()
+      .put("index.number_of_shards", shardsNumber))
+    client.indices().rollover(request, RequestOptions.DEFAULT)
   }
 }

@@ -14,7 +14,7 @@ object CreateIndexTest extends App {
                     .put("index.number_of_replicas", 2)
                     .put("index.blocks.read_only", false)
 
-  ElasticHighLevelRestClient.createIndex("scala_index_2", settings)
+  ElasticHighLevelRestClient.createIndex("scala_index_2", null ,settings)
 
   // With explicit mapping
   val mapping = "{ \"properties\" : {   \"field_one\" : { \"type\" : \"text\"},  \"field_two\" : { \"type\" : \"text\"},  \"field_three\" : { \"type\" : \"text\" }, \"field_four\" : { \"type\" : \"text\" } }}"
