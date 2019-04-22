@@ -23,12 +23,14 @@ import org.elasticsearch.action.admin.indices.settings.get.{GetSettingsRequest, 
 import org.elasticsearch.action.admin.indices.settings.put.UpdateSettingsRequest
 import org.elasticsearch.action.admin.indices.shrink.{ResizeRequest, ResizeResponse}
 import org.elasticsearch.action.admin.indices.template.put.PutIndexTemplateRequest
+import org.elasticsearch.action.admin.indices.validate.query.{ValidateQueryRequest, ValidateQueryResponse}
 import org.elasticsearch.action.support.master.AcknowledgedResponse
 import org.elasticsearch.client._
 import org.elasticsearch.client.transport.TransportClient
 import org.elasticsearch.common.settings.Settings
 import org.elasticsearch.common.unit.{ByteSizeUnit, ByteSizeValue, TimeValue}
 import org.elasticsearch.common.xcontent.XContentType
+import org.elasticsearch.index.query.QueryBuilder
 
 import scala.collection.JavaConverters._
 
@@ -231,5 +233,14 @@ object ElasticHighLevelRestClient {
     request.alias(new Alias("{index}_alias"))
     request.order(templateOrder)
     client.indices().putTemplate(request, RequestOptions.DEFAULT)
+  }
+
+  def validateQuery(toBeValidatedQuery: QueryBuilder, indices: String*): ValidateQueryResponse = {
+    val request = new ValidateQueryRequest(indices: _*)
+    request.query(toBeValidatedQuery)
+    request.explain(true)
+    request.allShards(true)
+    request.rewrite(true)
+    client.indices().validateQuery(request, RequestOptions.DEFAULT)
   }
 }
