@@ -19,6 +19,7 @@ import org.elasticsearch.action.admin.indices.mapping.put.PutMappingRequest
 import org.elasticsearch.action.admin.indices.open.{OpenIndexRequest, OpenIndexResponse}
 import org.elasticsearch.action.admin.indices.refresh.{RefreshRequest, RefreshResponse}
 import org.elasticsearch.action.admin.indices.rollover.{RolloverRequest, RolloverResponse}
+import org.elasticsearch.action.admin.indices.settings.put.UpdateSettingsRequest
 import org.elasticsearch.action.admin.indices.shrink.{ResizeRequest, ResizeResponse}
 import org.elasticsearch.action.support.master.AcknowledgedResponse
 import org.elasticsearch.client._
@@ -206,5 +207,11 @@ object ElasticHighLevelRestClient {
     request.aliases(aliases: _*)
     request.indices(index)
     client.indices().getAlias(request, RequestOptions.DEFAULT)
+  }
+
+  def updateIndicesSettings(settings: Settings.Builder, indices: String*): AcknowledgedResponse = {
+    val request = new UpdateSettingsRequest(indices: _*)
+    request.settings(settings)
+    client.indices().putSettings(request, RequestOptions.DEFAULT)
   }
 }
