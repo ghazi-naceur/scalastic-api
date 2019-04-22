@@ -22,6 +22,7 @@ import org.elasticsearch.action.admin.indices.rollover.{RolloverRequest, Rollove
 import org.elasticsearch.action.admin.indices.settings.get.{GetSettingsRequest, GetSettingsResponse}
 import org.elasticsearch.action.admin.indices.settings.put.UpdateSettingsRequest
 import org.elasticsearch.action.admin.indices.shrink.{ResizeRequest, ResizeResponse}
+import org.elasticsearch.action.admin.indices.template.get.{GetIndexTemplatesRequest, GetIndexTemplatesResponse}
 import org.elasticsearch.action.admin.indices.template.put.PutIndexTemplateRequest
 import org.elasticsearch.action.admin.indices.validate.query.{ValidateQueryRequest, ValidateQueryResponse}
 import org.elasticsearch.action.support.master.AcknowledgedResponse
@@ -242,5 +243,10 @@ object ElasticHighLevelRestClient {
     request.allShards(true)
     request.rewrite(true)
     client.indices().validateQuery(request, RequestOptions.DEFAULT)
+  }
+
+  def getIndexTemplates(indices: String*): GetIndexTemplatesResponse = {
+    val request = new GetIndexTemplatesRequest(indices: _*)
+    client.indices().getTemplate(request, RequestOptions.DEFAULT)
   }
 }
