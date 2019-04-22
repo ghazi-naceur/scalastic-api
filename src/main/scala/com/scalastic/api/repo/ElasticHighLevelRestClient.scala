@@ -22,6 +22,7 @@ import org.elasticsearch.action.admin.indices.rollover.{RolloverRequest, Rollove
 import org.elasticsearch.action.admin.indices.settings.get.{GetSettingsRequest, GetSettingsResponse}
 import org.elasticsearch.action.admin.indices.settings.put.UpdateSettingsRequest
 import org.elasticsearch.action.admin.indices.shrink.{ResizeRequest, ResizeResponse}
+import org.elasticsearch.action.admin.indices.template.put.PutIndexTemplateRequest
 import org.elasticsearch.action.support.master.AcknowledgedResponse
 import org.elasticsearch.client._
 import org.elasticsearch.client.transport.TransportClient
@@ -220,5 +221,15 @@ object ElasticHighLevelRestClient {
     val request = new GetSettingsRequest().indices(indices: _*)
     request.includeDefaults(true)
     client.indices().getSettings(request, RequestOptions.DEFAULT)
+  }
+
+  def putIndexTemplate(indexName: String, patternName: String, indexTemplate: String, templateOrder: Int, settings: Settings.Builder): AcknowledgedResponse = {
+    val request = new PutIndexTemplateRequest(indexName)
+    val indexPatterns = List(patternName, indexTemplate)
+    request.patterns(indexPatterns.asJava)
+    request.settings(settings)
+    request.alias(new Alias("{index}_alias"))
+    request.order(templateOrder)
+    client.indices().putTemplate(request, RequestOptions.DEFAULT)
   }
 }
