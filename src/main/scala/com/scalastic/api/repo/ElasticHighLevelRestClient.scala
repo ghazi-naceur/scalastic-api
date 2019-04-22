@@ -21,8 +21,8 @@ import org.elasticsearch.action.admin.indices.refresh.{RefreshRequest, RefreshRe
 import org.elasticsearch.action.admin.indices.rollover.{RolloverRequest, RolloverResponse}
 import org.elasticsearch.action.admin.indices.shrink.{ResizeRequest, ResizeResponse}
 import org.elasticsearch.action.support.master.AcknowledgedResponse
+import org.elasticsearch.client._
 import org.elasticsearch.client.transport.TransportClient
-import org.elasticsearch.client.{RequestOptions, RestClientBuilder, RestHighLevelClient, SyncedFlushResponse}
 import org.elasticsearch.common.settings.Settings
 import org.elasticsearch.common.unit.{ByteSizeUnit, ByteSizeValue, TimeValue}
 import org.elasticsearch.common.xcontent.XContentType
@@ -199,5 +199,12 @@ object ElasticHighLevelRestClient {
     request.aliases(aliases: _*)
     request.indices(index)
     client.indices().existsAlias(request, RequestOptions.DEFAULT)
+  }
+
+  def getAlias(index: String, aliases: String*): GetAliasesResponse = {
+    val request = new GetAliasesRequest()
+    request.aliases(aliases: _*)
+    request.indices(index)
+    client.indices().getAlias(request, RequestOptions.DEFAULT)
   }
 }

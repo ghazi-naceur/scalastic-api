@@ -34,15 +34,15 @@ object ElasticJoiningQueryBuilder {
     extractResult(searchRequest, builder)
   }
 
-  def hasChildQuery(esIndex: String, esType: String, searchCriteria: Map[String, Any]): SearchResponse = {
-    val query = QueryBuilders.boolQuery()
-    for ((k, v) <- searchCriteria) {
-      query.must(QueryBuilders.termQuery(k, v))
-    }
-    val hasChildQueryBuilder = JoinQueryBuilders.hasChildQuery(esType, query, ScoreMode.None)
-    transportClient.prepareSearch(esIndex)
-      .setQuery(hasChildQueryBuilder).execute().actionGet()
-  }
+//  def hasChildQuery(esIndex: String, esType: String, searchCriteria: Map[String, Any]): SearchResponse = {
+//    val query = QueryBuilders.boolQuery()
+//    for ((k, v) <- searchCriteria) {
+//      query.must(QueryBuilders.termQuery(k, v))
+//    }
+//    val hasChildQueryBuilder = JoinQueryBuilders.hasChildQuery(esType, query, ScoreMode.None)
+//    transportClient.prepareSearch(esIndex)
+//      .setQuery(hasChildQueryBuilder).execute().actionGet()
+//  }
 
   private def extractResult(searchRequest: SearchRequest, builder: SearchSourceBuilder): List[Map[String, Any]] = {
     searchRequest.source(builder)
