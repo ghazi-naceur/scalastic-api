@@ -2,10 +2,11 @@ package com.scalastic.api.repo
 
 import com.scalastic.api.client.ElasticClient
 import org.apache.lucene.search.join.ScoreMode
-import org.elasticsearch.action.search.SearchRequest
+import org.elasticsearch.action.search.{SearchRequest, SearchResponse}
 import org.elasticsearch.client.transport.TransportClient
 import org.elasticsearch.client.{RequestOptions, RestHighLevelClient}
 import org.elasticsearch.index.query.QueryBuilders
+import org.elasticsearch.join.query.JoinQueryBuilders
 import org.elasticsearch.search.SearchHit
 import org.elasticsearch.search.builder.SearchSourceBuilder
 
@@ -31,6 +32,16 @@ object ElasticJoiningQueryBuilder {
     }
     val builder = new SearchSourceBuilder().query(QueryBuilders.nestedQuery(path, query, ScoreMode.Max)).from(from).size(size)
     extractResult(searchRequest, builder)
+  }
+
+  def hasChildQuery(esIndex: String, esType: String, searchCriteria: Map[String, Any]): SearchResponse = {
+    val query = QueryBuilders.boolQuery()
+    for ((k, v) <- searchCriteria) {
+      query.must(QueryBuilders.termQuery(k, v))
+    }
+    val hasChildQueryBuilder = JoinQueryBuilders.hasChildQuery(esType, query, ScoreMode.None)
+    transportClient.prepareSearch(esIndex)
+      .setQuery(hasChildQueryBuilder).execute().actionGet()
   }
 
   private def extractResult(searchRequest: SearchRequest, builder: SearchSourceBuilder): List[Map[String, Any]] = {

@@ -5,6 +5,7 @@ import java.util.concurrent.TimeUnit
 import com.scalastic.api.client.ElasticClient
 import org.elasticsearch.action.admin.cluster.health.ClusterHealthRequest
 import org.elasticsearch.action.admin.indices.alias.IndicesAliasesRequest.AliasActions
+import org.elasticsearch.action.admin.indices.alias.get.GetAliasesRequest
 import org.elasticsearch.action.admin.indices.alias.{Alias, IndicesAliasesRequest}
 import org.elasticsearch.action.admin.indices.cache.clear.{ClearIndicesCacheRequest, ClearIndicesCacheResponse}
 import org.elasticsearch.action.admin.indices.close.CloseIndexRequest
@@ -191,5 +192,12 @@ object ElasticHighLevelRestClient {
     }
     request.addAliasAction(aliasAction)
     client.indices().updateAliases(request, RequestOptions.DEFAULT)
+  }
+
+  def existsAlias(index: String, aliases: String*): Boolean = {
+    val request = new GetAliasesRequest(aliases: _*)
+    request.aliases(aliases: _*)
+    request.indices(index)
+    client.indices().existsAlias(request, RequestOptions.DEFAULT)
   }
 }
