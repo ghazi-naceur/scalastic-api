@@ -1,0 +1,2 @@
+POST http://localhost:9200/_aliases
+{"actions" : [{ "add" : { "index" : "scala_index_5", "alias" : "scala_alias_5" } }]}
