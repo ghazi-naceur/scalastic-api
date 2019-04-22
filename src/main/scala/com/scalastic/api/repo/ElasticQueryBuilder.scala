@@ -13,7 +13,7 @@ import org.elasticsearch.action.update.{UpdateRequest, UpdateResponse}
 import org.elasticsearch.client.transport.TransportClient
 import org.elasticsearch.client.{RequestOptions, RestHighLevelClient}
 import org.elasticsearch.common.unit.TimeValue
-import org.elasticsearch.common.xcontent.{XContentFactory, XContentType}
+import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory, XContentType}
 import org.elasticsearch.index.query.{MoreLikeThisQueryBuilder, Operator, QueryBuilders}
 import org.elasticsearch.index.reindex._
 import org.elasticsearch.search.SearchHit
@@ -48,6 +48,12 @@ object ElasticQueryBuilder {
   def insert(esIndex: String, esType: String, jsonSource: String): IndexResponse = {
     val request = new IndexRequest(esIndex, esType, UUID.randomUUID().toString)
     request.source(jsonSource, XContentType.JSON)
+    client.index(request, RequestOptions.DEFAULT)
+  }
+
+  def insert(esIndex: String, esType: String, jsonSource: XContentBuilder): IndexResponse = {
+    val request = new IndexRequest(esIndex, esType, UUID.randomUUID().toString)
+    request.source(jsonSource)
     client.index(request, RequestOptions.DEFAULT)
   }
 
