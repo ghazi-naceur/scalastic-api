@@ -8,7 +8,7 @@ import org.elasticsearch.action.bulk.{BulkRequestBuilder, BulkResponse}
 import org.elasticsearch.action.delete.{DeleteRequest, DeleteResponse}
 import org.elasticsearch.action.get.{GetRequest, GetResponse, MultiGetItemResponse}
 import org.elasticsearch.action.index.{IndexRequest, IndexResponse}
-import org.elasticsearch.action.search.SearchRequest
+import org.elasticsearch.action.search.{SearchRequest, SearchRequestBuilder}
 import org.elasticsearch.action.update.{UpdateRequest, UpdateResponse}
 import org.elasticsearch.client.transport.TransportClient
 import org.elasticsearch.client.{RequestOptions, RestHighLevelClient}
@@ -302,6 +302,23 @@ object ElasticQueryBuilder {
       val response: GetResponse = itemResponse.getResponse
       if (response.isExists) {
         result += response.getSourceAsMap.asScala.map(kv => (kv._1, kv._2)).toMap
+      }
+    }
+    result.toList
+  }
+
+  def multiSearch(builders: List[SearchRequestBuilder]): List[Map[String, Any]] = {
+    var result = ListBuffer[Map[String, Any]]()
+    val builder = transportClient.prepareMultiSearch()
+    for (b <- builders) {
+      builder.add(b)
+    }
+    val response = builder.get()
+
+    for (item <- response.getResponses) {
+      val response = item.getResponse
+      for (hit: SearchHit <- response.getHits.getHits) {
+        result += hit.getSourceAsMap.asScala.map(kv => (kv._1, kv._2)).toMap
       }
     }
     result.toList
