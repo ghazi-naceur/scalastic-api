@@ -1,4 +1,4 @@
-package com.scalastic.api.repo.document.api
+package com.scalastic.api.repo.search.api
 
 import com.scalastic.api.client.ElasticClient
 import com.scalastic.api.entities.Person

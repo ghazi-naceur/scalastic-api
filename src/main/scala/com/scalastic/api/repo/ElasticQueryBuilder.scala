@@ -17,6 +17,7 @@ import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory, XCon
 import org.elasticsearch.index.query.{MoreLikeThisQueryBuilder, Operator, QueryBuilders}
 import org.elasticsearch.index.reindex._
 import org.elasticsearch.search.SearchHit
+import org.elasticsearch.search.aggregations.{Aggregation, AggregationBuilder}
 import org.elasticsearch.search.builder.SearchSourceBuilder
 
 import scala.collection.JavaConverters._
@@ -322,6 +323,20 @@ object ElasticQueryBuilder {
       }
     }
     result.toList
+  }
+
+  def searchWithAggregations(builders: Map[String, AggregationBuilder], indices: String*) = {
+    var aggs = ListBuffer[Aggregation]()
+    val builder = transportClient.prepareSearch(indices: _*)
+    for (b <- builders) {
+      builder.addAggregation(b._2)
+    }
+    val response = builder.get()
+
+    for (b <- builders) {
+      aggs += response.getAggregations.get(b._1)
+    }
+    aggs.toList
   }
 
 }
