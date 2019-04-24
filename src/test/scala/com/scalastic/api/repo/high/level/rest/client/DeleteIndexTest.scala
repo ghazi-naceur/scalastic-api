@@ -1,6 +1,6 @@
 package com.scalastic.api.repo.high.level.rest.client
 
-import com.scalastic.api.repo.ElasticHighLevelRestClient
+import com.scalastic.api.high.level.rest.client.ElasticHighLevelRestClient
 
 /**
   * Created by Ghazi Naceur on 19/04/2019

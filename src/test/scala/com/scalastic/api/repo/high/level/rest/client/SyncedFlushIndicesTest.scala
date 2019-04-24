@@ -2,7 +2,7 @@ package com.scalastic.api.repo.high.level.rest.client
 
 import java.util
 
-import com.scalastic.api.repo.ElasticHighLevelRestClient
+import com.scalastic.api.high.level.rest.client.ElasticHighLevelRestClient
 import org.elasticsearch.client.SyncedFlushResponse
 
 import scala.collection.JavaConverters._

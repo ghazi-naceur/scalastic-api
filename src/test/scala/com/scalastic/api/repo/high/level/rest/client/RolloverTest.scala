@@ -1,7 +1,8 @@
 package com.scalastic.api.repo.high.level.rest.client
 
 import com.scalastic.api.entities.Person
-import com.scalastic.api.repo.{ElasticHighLevelRestClient, ElasticQueryBuilder}
+import com.scalastic.api.high.level.rest.client.ElasticHighLevelRestClient
+import com.scalastic.api.repo.ElasticQueryBuilder
 import org.elasticsearch.action.admin.indices.rollover.RolloverResponse
 
 /**

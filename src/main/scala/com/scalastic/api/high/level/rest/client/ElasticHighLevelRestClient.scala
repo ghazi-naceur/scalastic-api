@@ -1,4 +1,4 @@
-package com.scalastic.api.repo
+package com.scalastic.api.high.level.rest.client
 
 import java.util.concurrent.TimeUnit
 
@@ -26,15 +26,13 @@ import org.elasticsearch.action.admin.indices.template.get.{GetIndexTemplatesReq
 import org.elasticsearch.action.admin.indices.template.put.PutIndexTemplateRequest
 import org.elasticsearch.action.admin.indices.validate.query.{ValidateQueryRequest, ValidateQueryResponse}
 import org.elasticsearch.action.support.master.AcknowledgedResponse
-import org.elasticsearch.client._
 import org.elasticsearch.client.transport.TransportClient
+import org.elasticsearch.client._
 import org.elasticsearch.common.settings.Settings
 import org.elasticsearch.common.unit.{ByteSizeUnit, ByteSizeValue, TimeValue}
 import org.elasticsearch.common.xcontent.XContentType
 import org.elasticsearch.index.query.QueryBuilder
-
 import scala.collection.JavaConverters._
-
 
 /**
   * Created by Ghazi Naceur on 18/04/2019
@@ -113,9 +111,9 @@ object ElasticHighLevelRestClient {
 
   /** OPEN BUG : https://github.com/elastic/elasticsearch/issues/29652#
     *
-    * @param targetIndex  The target index
-    * @param sourceIndex  The source index
-    * @param shardsNumber : The requested number of primary shards in the target index must be a
+    *  targetIndex  The target index
+    *  sourceIndex  The source index
+    *  shardsNumber : The requested number of primary shards in the target index must be a
     *                     factor of the number of shards in the source index. For example an index
     *                     with 8 primary shards can be shrunk into 4, 2 or 1 primary shards or an
     *                     index with 15 primary shards can be shrunk into 5, 3 or 1.

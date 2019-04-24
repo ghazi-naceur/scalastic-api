@@ -1,6 +1,6 @@
 package com.scalastic.api.repo.high.level.rest.client
 
-import com.scalastic.api.repo.ElasticHighLevelRestClient
+import com.scalastic.api.high.level.rest.client.ElasticHighLevelRestClient
 import org.elasticsearch.action.admin.indices.shrink.ResizeResponse
 
 /**
