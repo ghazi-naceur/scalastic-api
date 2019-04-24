@@ -1,4 +1,4 @@
-package com.scalastic.api.repo.document.api
+package com.scalastic.api.repo.high.level.rest.client.document.api
 
 import com.scalastic.api.config.PropertiesLoader.{PERSON_INDEX, PERSON_TYPE}
 import com.scalastic.api.entities.Person
@@ -10,7 +10,7 @@ import play.api.libs.json.Json
   * Created by Ghazi Naceur on 07/04/2019
   * Email: ghazi.ennacer@gmail.com
   */
-object InsertTest extends App {
+object IndexRequestTest extends App {
 
   // 1- Source as Map :
   val person = Person("Isaac", "Netero", 125, "Hunter")

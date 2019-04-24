@@ -7,6 +7,8 @@ import org.elasticsearch.action.get.GetRequest
 import org.elasticsearch.action.index.{IndexRequest, IndexResponse}
 import org.elasticsearch.client.{RequestOptions, RestHighLevelClient}
 import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory, XContentType}
+import org.elasticsearch.search.fetch.subphase.FetchSourceContext
+
 import scala.collection.JavaConverters._
 
 object SingleDocumentAPIs {
@@ -43,5 +45,12 @@ object SingleDocumentAPIs {
     // asScala : to have a mutable map
     // map(kv => (kv._1,kv._2)).toMap : to get an immutable map
     response.getSource.asScala.map(kv => (kv._1, kv._2)).toMap
+  }
+
+  def exists(esIndex: String, esType: String, esId: String): Boolean = {
+    val getRequest = new GetRequest(esIndex, esType, esId)
+    getRequest.fetchSourceContext(new FetchSourceContext(false))
+    getRequest.storedFields("_none_")
+    client.exists(getRequest, RequestOptions.DEFAULT)
   }
 }
