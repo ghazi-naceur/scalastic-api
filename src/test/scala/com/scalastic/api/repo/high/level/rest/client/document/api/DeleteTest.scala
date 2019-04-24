@@ -1,4 +1,4 @@
-package com.scalastic.api.repo.document.api
+package com.scalastic.api.repo.high.level.rest.client.document.api
 
 import com.scalastic.api.config.PropertiesLoader.{PERSON_INDEX, PERSON_TYPE}
 import com.scalastic.api.high.level.rest.client.document.api.SingleDocumentAPIs

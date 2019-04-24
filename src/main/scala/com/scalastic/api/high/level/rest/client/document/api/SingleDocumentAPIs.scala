@@ -6,6 +6,7 @@ import com.scalastic.api.client.ElasticClient
 import org.elasticsearch.action.delete.{DeleteRequest, DeleteResponse}
 import org.elasticsearch.action.get.GetRequest
 import org.elasticsearch.action.index.{IndexRequest, IndexResponse}
+import org.elasticsearch.action.update.{UpdateRequest, UpdateResponse}
 import org.elasticsearch.client.{RequestOptions, RestHighLevelClient}
 import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory, XContentType}
 import org.elasticsearch.search.fetch.subphase.FetchSourceContext
@@ -58,5 +59,17 @@ object SingleDocumentAPIs {
   def delete(esIndex: String, esType: String, esId: String): DeleteResponse = {
     val deleteRequest = new DeleteRequest(esIndex, esType, esId)
     client.delete(deleteRequest, RequestOptions.DEFAULT)
+  }
+
+  def update(esIndex: String, esType: String, esId: String, map: Map[String, Any]): UpdateResponse = {
+    val updateRequest = new UpdateRequest(esIndex, esType, esId)
+    val builder = XContentFactory.jsonBuilder
+    builder.startObject
+    for ((k, v) <- map) {
+      builder.field(k, v)
+    }
+    builder.endObject
+    updateRequest.doc(builder)
+    client.update(updateRequest, RequestOptions.DEFAULT)
   }
 }

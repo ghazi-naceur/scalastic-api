@@ -5,13 +5,11 @@ import java.util.UUID
 import com.scalastic.api.client.ElasticClient
 import org.elasticsearch.action.ActionListener
 import org.elasticsearch.action.bulk.{BulkRequestBuilder, BulkResponse}
-import org.elasticsearch.action.get.{GetRequest, GetResponse, MultiGetItemResponse}
+import org.elasticsearch.action.get.{GetResponse, MultiGetItemResponse}
 import org.elasticsearch.action.search.{SearchRequest, SearchRequestBuilder}
-import org.elasticsearch.action.update.{UpdateRequest, UpdateResponse}
 import org.elasticsearch.client.transport.TransportClient
 import org.elasticsearch.client.{RequestOptions, RestHighLevelClient}
 import org.elasticsearch.common.unit.TimeValue
-import org.elasticsearch.common.xcontent.XContentFactory
 import org.elasticsearch.index.query.{MoreLikeThisQueryBuilder, Operator, QueryBuilders}
 import org.elasticsearch.index.reindex._
 import org.elasticsearch.search.SearchHit
@@ -31,26 +29,6 @@ object ElasticQueryBuilder {
   private val transportClient: TransportClient = ElasticClient.transportClient
   private val from = 0
   private val size = 100
-
-  def update(esIndex: String, esType: String, esId: String, map: Map[String, Any]): UpdateResponse = {
-    val updateRequest = new UpdateRequest(esIndex, esType, esId)
-    val builder = XContentFactory.jsonBuilder
-    builder.startObject
-    for ((k, v) <- map) {
-      builder.field(k, v)
-    }
-    builder.endObject
-    updateRequest.doc(builder)
-    client.update(updateRequest, RequestOptions.DEFAULT)
-  }
-
-  def getById(esIndex: String, esType: String, esId: String): Map[String, Any] = {
-    val getRequest = new GetRequest(esIndex, esType, esId)
-    val response = client.get(getRequest, RequestOptions.DEFAULT)
-    // asScala : to have a mutable map
-    // map(kv => (kv._1,kv._2)).toMap : to get an immutable map
-    response.getSource.asScala.map(kv => (kv._1, kv._2)).toMap
-  }
 
   // Getting the first page
   def getAll(index: String): List[Map[String, Any]] = {
