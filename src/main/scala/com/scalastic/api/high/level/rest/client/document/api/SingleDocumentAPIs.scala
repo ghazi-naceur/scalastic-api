@@ -3,6 +3,7 @@ package com.scalastic.api.high.level.rest.client.document.api
 import java.util.UUID
 
 import com.scalastic.api.client.ElasticClient
+import org.elasticsearch.action.delete.{DeleteRequest, DeleteResponse}
 import org.elasticsearch.action.get.GetRequest
 import org.elasticsearch.action.index.{IndexRequest, IndexResponse}
 import org.elasticsearch.client.{RequestOptions, RestHighLevelClient}
@@ -52,5 +53,10 @@ object SingleDocumentAPIs {
     getRequest.fetchSourceContext(new FetchSourceContext(false))
     getRequest.storedFields("_none_")
     client.exists(getRequest, RequestOptions.DEFAULT)
+  }
+
+  def delete(esIndex: String, esType: String, esId: String): DeleteResponse = {
+    val deleteRequest = new DeleteRequest(esIndex, esType, esId)
+    client.delete(deleteRequest, RequestOptions.DEFAULT)
   }
 }

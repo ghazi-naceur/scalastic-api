@@ -5,15 +5,13 @@ import java.util.UUID
 import com.scalastic.api.client.ElasticClient
 import org.elasticsearch.action.ActionListener
 import org.elasticsearch.action.bulk.{BulkRequestBuilder, BulkResponse}
-import org.elasticsearch.action.delete.{DeleteRequest, DeleteResponse}
 import org.elasticsearch.action.get.{GetRequest, GetResponse, MultiGetItemResponse}
-import org.elasticsearch.action.index.{IndexRequest, IndexResponse}
 import org.elasticsearch.action.search.{SearchRequest, SearchRequestBuilder}
 import org.elasticsearch.action.update.{UpdateRequest, UpdateResponse}
 import org.elasticsearch.client.transport.TransportClient
 import org.elasticsearch.client.{RequestOptions, RestHighLevelClient}
 import org.elasticsearch.common.unit.TimeValue
-import org.elasticsearch.common.xcontent.{XContentBuilder, XContentFactory, XContentType}
+import org.elasticsearch.common.xcontent.XContentFactory
 import org.elasticsearch.index.query.{MoreLikeThisQueryBuilder, Operator, QueryBuilders}
 import org.elasticsearch.index.reindex._
 import org.elasticsearch.search.SearchHit
@@ -60,11 +58,6 @@ object ElasticQueryBuilder {
     val builder = searchSourceBuilder.query(QueryBuilders.matchAllQuery())
     val searchRequest = new SearchRequest(index)
     extractResult(searchRequest, builder)
-  }
-
-  def delete(esIndex: String, esType: String, esId: String): DeleteResponse = {
-    val deleteRequest = new DeleteRequest(esIndex, esType, esId)
-    client.delete(deleteRequest, RequestOptions.DEFAULT)
   }
 
   def deleteByQuery(criteria: Map[String, Any], indexes: String*): BulkByScrollResponse = {
