@@ -2,6 +2,7 @@ package com.scalastic.api.repo.search.api
 
 import com.scalastic.api.config.PropertiesLoader.{CITY_INDEX, CITY_TYPE, PERSON_INDEX}
 import com.scalastic.api.entities.{City, Person}
+import com.scalastic.api.high.level.rest.client.document.api.SingleDocumentAPIs
 import com.scalastic.api.repo.ElasticQueryBuilder
 
 /**
@@ -21,9 +22,9 @@ object CommonTermsQueryTest extends App {
   println("2- Second example :")
   // 2- Second example :
   val city = City("Konoha", "some prefecture", "Hidden leaf", 5000)
-  ElasticQueryBuilder.insert(CITY_INDEX, CITY_TYPE, city.toMap())
-  ElasticQueryBuilder.insert(CITY_INDEX, CITY_TYPE, city.toMap())
-  ElasticQueryBuilder.insert(CITY_INDEX, CITY_TYPE, city.toMap())
+  SingleDocumentAPIs.index(CITY_INDEX, CITY_TYPE, city.toMap())
+  SingleDocumentAPIs.index(CITY_INDEX, CITY_TYPE, city.toMap())
+  SingleDocumentAPIs.index(CITY_INDEX, CITY_TYPE, city.toMap())
   println("a- :")
   // a :
   val cities1 = ElasticQueryBuilder.getDocsWithCommonTermsQuery(CITY_INDEX, "name", "Konoha")

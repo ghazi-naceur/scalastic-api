@@ -34,30 +34,6 @@ object ElasticQueryBuilder {
   private val from = 0
   private val size = 100
 
-  def insert(esIndex: String, esType: String, entity: Map[String, Any]): IndexResponse = {
-    val request = new IndexRequest(esIndex, esType, UUID.randomUUID().toString)
-    val builder = XContentFactory.jsonBuilder
-    builder.startObject
-    for ((k, v) <- entity) {
-      builder.field(k, v)
-    }
-    builder.endObject
-    request.source(builder)
-    client.index(request, RequestOptions.DEFAULT)
-  }
-
-  def insert(esIndex: String, esType: String, jsonSource: String): IndexResponse = {
-    val request = new IndexRequest(esIndex, esType, UUID.randomUUID().toString)
-    request.source(jsonSource, XContentType.JSON)
-    client.index(request, RequestOptions.DEFAULT)
-  }
-
-  def insert(esIndex: String, esType: String, jsonSource: XContentBuilder): IndexResponse = {
-    val request = new IndexRequest(esIndex, esType, UUID.randomUUID().toString)
-    request.source(jsonSource)
-    client.index(request, RequestOptions.DEFAULT)
-  }
-
   def update(esIndex: String, esType: String, esId: String, map: Map[String, Any]): UpdateResponse = {
     val updateRequest = new UpdateRequest(esIndex, esType, esId)
     val builder = XContentFactory.jsonBuilder

@@ -2,7 +2,7 @@ package com.scalastic.api.repo.high.level.rest.client
 
 import com.scalastic.api.entities.Person
 import com.scalastic.api.high.level.rest.client.ElasticHighLevelRestClient
-import com.scalastic.api.repo.ElasticQueryBuilder
+import com.scalastic.api.high.level.rest.client.document.api.SingleDocumentAPIs
 import org.elasticsearch.action.admin.indices.rollover.RolloverResponse
 
 /**
@@ -25,11 +25,11 @@ object RolloverTest extends App {
   ElasticHighLevelRestClient.createIndex("rollover_index_1", "rollover_alias_1", null)
 
   val person = Person("Isaac", "Netero", 125, "Hunter")
-  for (i <- 0 until 600) {
-    ElasticQueryBuilder.insert("rollover_alias_1", "rollover", person.toMap())
+  for (i <- 0 until 501) {
+    SingleDocumentAPIs.index("rollover_alias_1", "rollover", person.toMap())
   }
 
-  private val response: RolloverResponse = ElasticHighLevelRestClient.rollover("rollover_alias_1", "rollover_index_2", 16)
+  private val response: RolloverResponse = ElasticHighLevelRestClient.rollover("rollover_alias_1", "rollover_index_3", 16)
   println(response.getOldIndex)
   println(response.getNewIndex)
   println(response.isDryRun)
@@ -38,7 +38,7 @@ object RolloverTest extends App {
 
 
   for (i <- 0 until 100) {
-    ElasticQueryBuilder.insert("rollover_alias_1", "rollover", person.toMap())
+    SingleDocumentAPIs.index("rollover_alias_1", "rollover", person.toMap())
   }
 
   System.exit(0)
