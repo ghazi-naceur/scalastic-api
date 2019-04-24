@@ -5,7 +5,9 @@ import org.elasticsearch.action.DocWriteRequest
 import org.elasticsearch.action.bulk.{BulkRequest, BulkResponse}
 import org.elasticsearch.action.get.{MultiGetRequest, MultiGetResponse}
 import org.elasticsearch.client.{RequestOptions, RestHighLevelClient}
-import org.elasticsearch.index.reindex.{BulkByScrollResponse, ReindexRequest}
+import org.elasticsearch.index.query.QueryBuilder
+import org.elasticsearch.index.reindex.{BulkByScrollResponse, ReindexRequest, UpdateByQueryRequest}
+import org.elasticsearch.script.Script
 
 object MultiDocumentAPIs {
 
@@ -33,5 +35,15 @@ object MultiDocumentAPIs {
     request.setDestIndex(destinationIndex)
     request.setRefresh(true)
     client.reindex(request, RequestOptions.DEFAULT)
+  }
+
+  def updateByQuery(script: Script, query: QueryBuilder, indices: String*): BulkByScrollResponse = {
+    val request = new UpdateByQueryRequest(indices: _*)
+    request.setConflicts("proceed")
+    request.setScript(script)
+    if (query != null) {
+      request.setQuery(query)
+    }
+    client.updateByQuery(request, RequestOptions.DEFAULT)
   }
 }
