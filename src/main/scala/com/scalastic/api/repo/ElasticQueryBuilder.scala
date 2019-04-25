@@ -10,7 +10,7 @@ import org.elasticsearch.action.search.{SearchRequest, SearchRequestBuilder}
 import org.elasticsearch.client.transport.TransportClient
 import org.elasticsearch.client.{RequestOptions, RestHighLevelClient}
 import org.elasticsearch.common.unit.TimeValue
-import org.elasticsearch.index.query.{MoreLikeThisQueryBuilder, Operator, QueryBuilders}
+import org.elasticsearch.index.query.{MoreLikeThisQueryBuilder, QueryBuilders}
 import org.elasticsearch.index.reindex._
 import org.elasticsearch.search.SearchHit
 import org.elasticsearch.search.aggregations.{Aggregation, AggregationBuilder}
@@ -101,13 +101,6 @@ object ElasticQueryBuilder {
     } while (scrollResp.getHits.getHits.length != 0)
 
     result.toList
-  }
-
-  def getDocsWithSimpleQueryStringQuery(index: String, defaultOperator: Operator, query: Array[String]): List[Map[String, Any]] = {
-    val searchRequest = new SearchRequest(index)
-    val fieldsWithOperator = query.mkString(" " + defaultOperator.toString + " ")
-    val builder = new SearchSourceBuilder().query(QueryBuilders.simpleQueryStringQuery(fieldsWithOperator)).from(from).size(size)
-    extractResult(searchRequest, builder)
   }
 
   def getDocsWithPrefixQuery(index: String, field: String, value: String): List[Map[String, Any]] = {

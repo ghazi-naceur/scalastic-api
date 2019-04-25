@@ -48,7 +48,12 @@ object SearchAPIs {
 
   def searchWithQueryStringQuery(index: String, defaultField: String, defaultOperator: Operator, query: Array[String]): List[Map[String, Any]] = {
     val fieldsWithOperator = query.mkString(" " + defaultOperator.toString + " ")
-    searchWithQueryBuilder(QueryBuilders.queryStringQuery(fieldsWithOperator).defaultField(defaultField))
+    searchWithQueryBuilder(QueryBuilders.queryStringQuery(fieldsWithOperator).defaultField(defaultField), index)
+  }
+
+  def searchWithSimpleQueryStringQuery(index: String, defaultOperator: Operator, query: Array[String]): List[Map[String, Any]] = {
+    val fieldsWithOperator = query.mkString(" " + defaultOperator.toString + " ")
+    searchWithQueryBuilder(QueryBuilders.simpleQueryStringQuery(fieldsWithOperator), index)
   }
 
   // This is the generic one !
