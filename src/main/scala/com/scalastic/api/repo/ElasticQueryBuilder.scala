@@ -103,15 +103,6 @@ object ElasticQueryBuilder {
     result.toList
   }
 
-  def search(index: String, searchCriteria: Map[String, Any]): List[Map[String, Any]] = {
-    val searchRequest = new SearchRequest(index)
-    val query = QueryBuilders.boolQuery()
-    for ((k, v) <- searchCriteria) {
-      query.must(QueryBuilders.matchPhraseQuery(k, v))
-    }
-    val builder = new SearchSourceBuilder().query(query).from(from).size(size)
-    extractResult(searchRequest, builder)
-  }
 
   def getDocsWithMultiMatchQuery(indices: Array[String], value: String, fieldNames: String*): List[Map[String, Any]] = {
     val builder: SearchSourceBuilder = new SearchSourceBuilder().query(QueryBuilders.multiMatchQuery(value, fieldNames: _*))

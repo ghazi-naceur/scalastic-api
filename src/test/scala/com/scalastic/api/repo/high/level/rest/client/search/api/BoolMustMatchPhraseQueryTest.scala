@@ -8,8 +8,9 @@ import com.scalastic.api.high.level.rest.client.search.api.SearchAPIs
   * Created by Ghazi Naceur on 25/04/2019
   * Email: ghazi.ennacer@gmail.com
   */
-object MatchQueryTest extends App {
-  val persons = SearchAPIs.searchWithMatchQuery("lastName", "Netero", PERSON_INDEX, "persons")
+object BoolMustMatchPhraseQueryTest extends App {
+  val map = Map[String, Any]( "firstName" -> "Beyond", "lastName" -> "Netero", "occupation" -> "Hunter")
+  val persons = SearchAPIs.searchWithBoolMustMatchPhraseQuery(map, PERSON_INDEX, "persons")
   persons.foreach(map => {
     println(Person.toPerson(map).toString)
   })
