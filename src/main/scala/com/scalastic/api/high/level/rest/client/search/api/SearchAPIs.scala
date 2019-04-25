@@ -56,6 +56,10 @@ object SearchAPIs {
     searchWithQueryBuilder(QueryBuilders.simpleQueryStringQuery(fieldsWithOperator), index)
   }
 
+  def searchWithPrefixQuery(index: String, field: String, value: String): List[Map[String, Any]] = {
+    searchWithQueryBuilder(QueryBuilders.prefixQuery(field, value), index)
+  }
+
   // This is the generic one !
   def searchWithQueryBuilder(queryBuilder: QueryBuilder, indices: String*): List[Map[String, Any]] = {
     val searchSourceBuilder = new SearchSourceBuilder
