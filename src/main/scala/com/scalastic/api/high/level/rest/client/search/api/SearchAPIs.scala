@@ -38,6 +38,10 @@ object SearchAPIs {
     searchWithQueryBuilder(QueryBuilders.termsQuery(field, values: _*), indices: _*)
   }
 
+  def searchWithTermQuery(indices: Array[String], field: String, value: String): List[Map[String, Any]] = {
+    searchWithQueryBuilder(QueryBuilders.termQuery(field, value), indices: _*)
+  }
+
   // This is the generic one !
   def searchWithQueryBuilder(queryBuilder: QueryBuilder, indices: String*): List[Map[String, Any]] = {
     val searchSourceBuilder = new SearchSourceBuilder
