@@ -65,6 +65,17 @@ object SearchAPIs {
       .maxQueryTerms(12), index)
   }
 
+  def searchWithRangeQuery(index: String, field: String, lte: Option[Int], gte: Option[Int]): List[Map[String, Any]] = {
+    val query = QueryBuilders.rangeQuery(field)
+    if (lte != null) {
+      query.lte(lte.get)
+    }
+    if (gte != null) {
+      query.gte(gte.get)
+    }
+    searchWithQueryBuilder(query, index)
+  }
+
   // This is the generic one !
   def searchWithQueryBuilder(queryBuilder: QueryBuilder, indices: String*): List[Map[String, Any]] = {
     val searchSourceBuilder = new SearchSourceBuilder

@@ -103,19 +103,6 @@ object ElasticQueryBuilder {
     result.toList
   }
 
-  def getDocsWithRangeQuery(index: String, field: String, lte: Option[Int], gte: Option[Int]): List[Map[String, Any]] = {
-    val searchRequest = new SearchRequest(index)
-    val query = QueryBuilders.rangeQuery(field)
-    if (lte != null) {
-      query.lte(lte.get)
-    }
-    if (gte != null) {
-      query.gte(gte.get)
-    }
-    val builder = new SearchSourceBuilder().query(query).from(from).size(size)
-    extractResult(searchRequest, builder)
-  }
-
   def getDocsWithExistsQuery(index: String, field: String): List[Map[String, Any]] = {
     val searchRequest = new SearchRequest(index)
     val builder = new SearchSourceBuilder().query(QueryBuilders.existsQuery(field)).from(from).size(size)
