@@ -103,13 +103,6 @@ object ElasticQueryBuilder {
     result.toList
   }
 
-  def getDocsWithQueryStringQuery(index: String, defaultField: String, defaultOperator: Operator, query: Array[String]): List[Map[String, Any]] = {
-    val searchRequest = new SearchRequest(index)
-    val fieldsWithOperator = query.mkString(" " + defaultOperator.toString + " ")
-    val builder = new SearchSourceBuilder().query(QueryBuilders.queryStringQuery(fieldsWithOperator).defaultField(defaultField)).from(from).size(size)
-    extractResult(searchRequest, builder)
-  }
-
   def getDocsWithSimpleQueryStringQuery(index: String, defaultOperator: Operator, query: Array[String]): List[Map[String, Any]] = {
     val searchRequest = new SearchRequest(index)
     val fieldsWithOperator = query.mkString(" " + defaultOperator.toString + " ")

@@ -2,7 +2,7 @@ package com.scalastic.api.high.level.rest.client.search.api
 
 import com.scalastic.api.utils.DataExtractor
 import org.elasticsearch.action.search.SearchRequest
-import org.elasticsearch.index.query.{QueryBuilder, QueryBuilders}
+import org.elasticsearch.index.query.{Operator, QueryBuilder, QueryBuilders}
 import org.elasticsearch.search.builder.SearchSourceBuilder
 
 
@@ -44,6 +44,11 @@ object SearchAPIs {
 
   def searchWithCommonTermsQuery(indices: Array[String], field: String, value: String): List[Map[String, Any]] = {
     searchWithQueryBuilder(QueryBuilders.commonTermsQuery(field, value), indices: _*)
+  }
+
+  def searchWithQueryStringQuery(index: String, defaultField: String, defaultOperator: Operator, query: Array[String]): List[Map[String, Any]] = {
+    val fieldsWithOperator = query.mkString(" " + defaultOperator.toString + " ")
+    searchWithQueryBuilder(QueryBuilders.queryStringQuery(fieldsWithOperator).defaultField(defaultField))
   }
 
   // This is the generic one !
