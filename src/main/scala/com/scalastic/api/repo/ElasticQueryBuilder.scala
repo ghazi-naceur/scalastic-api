@@ -31,12 +31,8 @@ object ElasticQueryBuilder {
   private val size = 100
 
   // Getting the first page
-  def getAll(index: String): List[Map[String, Any]] = {
-    val searchSourceBuilder = new SearchSourceBuilder
-    val builder = searchSourceBuilder.query(QueryBuilders.matchAllQuery())
-    val searchRequest = new SearchRequest(index)
-    extractResult(searchRequest, builder)
-  }
+
+
 
   def deleteByQuery(criteria: Map[String, Any], indexes: String*): BulkByScrollResponse = {
     val query = DeleteByQueryAction.INSTANCE.newRequestBuilder(transportClient)
