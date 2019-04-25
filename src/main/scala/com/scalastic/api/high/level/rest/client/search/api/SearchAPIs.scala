@@ -76,6 +76,10 @@ object SearchAPIs {
     searchWithQueryBuilder(query, index)
   }
 
+  def searchWithExistsQuery(index: String, field: String): List[Map[String, Any]] = {
+    searchWithQueryBuilder(QueryBuilders.existsQuery(field), index)
+  }
+
   // This is the generic one !
   def searchWithQueryBuilder(queryBuilder: QueryBuilder, indices: String*): List[Map[String, Any]] = {
     val searchSourceBuilder = new SearchSourceBuilder
