@@ -2,12 +2,14 @@ package com.scalastic.api.high.level.rest.client.document.api
 
 import com.scalastic.api.client.ElasticClient
 import org.elasticsearch.action.DocWriteRequest
+import org.elasticsearch.action.admin.cluster.node.tasks.list.ListTasksResponse
 import org.elasticsearch.action.bulk.{BulkRequest, BulkResponse}
 import org.elasticsearch.action.get.{MultiGetRequest, MultiGetResponse}
-import org.elasticsearch.client.{RequestOptions, RestHighLevelClient}
+import org.elasticsearch.client.{RequestOptions, RestHighLevelClient, RethrottleRequest}
 import org.elasticsearch.index.query.QueryBuilder
 import org.elasticsearch.index.reindex.{BulkByScrollResponse, DeleteByQueryRequest, ReindexRequest, UpdateByQueryRequest}
 import org.elasticsearch.script.Script
+import org.elasticsearch.tasks.TaskId
 
 object MultiDocumentAPIs {
 
@@ -54,5 +56,20 @@ object MultiDocumentAPIs {
       request.setQuery(query)
     }
     client.deleteByQuery(request, RequestOptions.DEFAULT)
+  }
+
+  def rethrottleReindex(taskId: TaskId): ListTasksResponse = {
+    val request = new RethrottleRequest(taskId)
+    client.reindexRethrottle(request, RequestOptions.DEFAULT)
+  }
+
+  def rethrottleDeleteByQuery(taskId: TaskId): ListTasksResponse = {
+    val request = new RethrottleRequest(taskId)
+    client.deleteByQueryRethrottle(request, RequestOptions.DEFAULT)
+  }
+
+  def rethrottleUpdateByQuery(taskId: TaskId): ListTasksResponse = {
+    val request = new RethrottleRequest(taskId)
+    client.updateByQueryRethrottle(request, RequestOptions.DEFAULT)
   }
 }
