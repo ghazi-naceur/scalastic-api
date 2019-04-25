@@ -2,7 +2,7 @@ package com.scalastic.api.high.level.rest.client.search.api
 
 import com.scalastic.api.utils.DataExtractor
 import org.elasticsearch.action.search.SearchRequest
-import org.elasticsearch.index.query.{Operator, QueryBuilder, QueryBuilders}
+import org.elasticsearch.index.query.{MoreLikeThisQueryBuilder, Operator, QueryBuilder, QueryBuilders}
 import org.elasticsearch.search.builder.SearchSourceBuilder
 
 
@@ -58,6 +58,11 @@ object SearchAPIs {
 
   def searchWithPrefixQuery(index: String, field: String, value: String): List[Map[String, Any]] = {
     searchWithQueryBuilder(QueryBuilders.prefixQuery(field, value), index)
+  }
+
+  def searchWithMoreLikeThisQuery(index: String, fields: Array[String], likeTexts: Array[String], likeItems: Array[MoreLikeThisQueryBuilder.Item]): List[Map[String, Any]] = {
+    searchWithQueryBuilder(QueryBuilders.moreLikeThisQuery(fields, likeTexts, likeItems).minTermFreq(1)
+      .maxQueryTerms(12), index)
   }
 
   // This is the generic one !

@@ -10,7 +10,7 @@ import org.elasticsearch.action.search.{SearchRequest, SearchRequestBuilder}
 import org.elasticsearch.client.transport.TransportClient
 import org.elasticsearch.client.{RequestOptions, RestHighLevelClient}
 import org.elasticsearch.common.unit.TimeValue
-import org.elasticsearch.index.query.{MoreLikeThisQueryBuilder, QueryBuilders}
+import org.elasticsearch.index.query.QueryBuilders
 import org.elasticsearch.index.reindex._
 import org.elasticsearch.search.SearchHit
 import org.elasticsearch.search.aggregations.{Aggregation, AggregationBuilder}
@@ -101,13 +101,6 @@ object ElasticQueryBuilder {
     } while (scrollResp.getHits.getHits.length != 0)
 
     result.toList
-  }
-
-  def getDocsWithMoreLikeThisQuery(index: String, fields: Array[String], likeTexts: Array[String], likeItems: Array[MoreLikeThisQueryBuilder.Item]): List[Map[String, Any]] = {
-    val searchRequest = new SearchRequest(index)
-    val builder = new SearchSourceBuilder().query(QueryBuilders.moreLikeThisQuery(fields, likeTexts, likeItems).minTermFreq(1)
-      .maxQueryTerms(12)).from(from).size(size)
-    extractResult(searchRequest, builder)
   }
 
   def getDocsWithRangeQuery(index: String, field: String, lte: Option[Int], gte: Option[Int]): List[Map[String, Any]] = {
