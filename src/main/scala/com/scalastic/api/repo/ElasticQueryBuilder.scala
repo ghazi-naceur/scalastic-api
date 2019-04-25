@@ -103,13 +103,6 @@ object ElasticQueryBuilder {
     result.toList
   }
 
-  def getDocsWithTermsQuery(indices: Array[String], field: String, values: String*): List[Map[String, Any]] = {
-    val builder: SearchSourceBuilder = new SearchSourceBuilder().query(QueryBuilders.termsQuery(field, values: _*))
-      .from(from).size(size)
-    val searchRequest = new SearchRequest(indices, builder)
-    extractResult(searchRequest)
-  }
-
   def getDocsWithTermQuery(index: String, field: String, value: String): List[Map[String, Any]] = {
     val searchRequest = new SearchRequest(index)
     val builder = new SearchSourceBuilder().query(QueryBuilders.termQuery(field, value)).from(from).size(size)
