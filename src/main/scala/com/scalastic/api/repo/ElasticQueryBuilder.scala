@@ -33,7 +33,6 @@ object ElasticQueryBuilder {
   // Getting the first page
 
 
-
   def deleteByQuery(criteria: Map[String, Any], indexes: String*): BulkByScrollResponse = {
     val query = DeleteByQueryAction.INSTANCE.newRequestBuilder(transportClient)
     for ((k, v) <- criteria) {
@@ -111,12 +110,6 @@ object ElasticQueryBuilder {
       query.must(QueryBuilders.matchPhraseQuery(k, v))
     }
     val builder = new SearchSourceBuilder().query(query).from(from).size(size)
-    extractResult(searchRequest, builder)
-  }
-
-  def getDocsWithMatchQuery(index: String, field: String, value: String): List[Map[String, Any]] = {
-    val searchRequest = new SearchRequest(index)
-    val builder = new SearchSourceBuilder().query(QueryBuilders.matchQuery(field, value)).from(from).size(size)
     extractResult(searchRequest, builder)
   }
 
