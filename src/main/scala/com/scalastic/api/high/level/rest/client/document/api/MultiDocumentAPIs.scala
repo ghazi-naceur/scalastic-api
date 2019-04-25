@@ -6,7 +6,7 @@ import org.elasticsearch.action.bulk.{BulkRequest, BulkResponse}
 import org.elasticsearch.action.get.{MultiGetRequest, MultiGetResponse}
 import org.elasticsearch.client.{RequestOptions, RestHighLevelClient}
 import org.elasticsearch.index.query.QueryBuilder
-import org.elasticsearch.index.reindex.{BulkByScrollResponse, ReindexRequest, UpdateByQueryRequest}
+import org.elasticsearch.index.reindex.{BulkByScrollResponse, DeleteByQueryRequest, ReindexRequest, UpdateByQueryRequest}
 import org.elasticsearch.script.Script
 
 object MultiDocumentAPIs {
@@ -45,5 +45,14 @@ object MultiDocumentAPIs {
       request.setQuery(query)
     }
     client.updateByQuery(request, RequestOptions.DEFAULT)
+  }
+
+  def deleteByQuery(query: QueryBuilder, indices: String*): BulkByScrollResponse = {
+    val request = new DeleteByQueryRequest(indices: _*)
+    request.setConflicts("proceed")
+    if (query != null) {
+      request.setQuery(query)
+    }
+    client.deleteByQuery(request, RequestOptions.DEFAULT)
   }
 }

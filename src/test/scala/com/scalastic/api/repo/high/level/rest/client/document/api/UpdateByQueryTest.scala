@@ -14,6 +14,7 @@ object UpdateByQueryTest extends App {
   val script = new Script(ScriptType.INLINE, "painless",
     "if (ctx._source.lastName == 'Netero') {ctx._source.age++;}", params.asJava)
   val query = QueryBuilders.matchQuery("lastName", "Netero")
+  // query could be null => update all
   private val response: BulkByScrollResponse = MultiDocumentAPIs.updateByQuery(script, query, "sc_persons")
 
   println(response.getCreated)
