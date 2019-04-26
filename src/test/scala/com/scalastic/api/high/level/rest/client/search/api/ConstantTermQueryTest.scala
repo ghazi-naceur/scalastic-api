@@ -1,6 +1,5 @@
-package com.scalastic.api.compound
+package com.scalastic.api.high.level.rest.client.search.api
 
-import com.scalastic.api.ElasticCompoundQueryBuilder
 import com.scalastic.api.config.PropertiesLoader
 import com.scalastic.api.entities.City
 
@@ -8,8 +7,8 @@ import com.scalastic.api.entities.City
   * Created by Ghazi Naceur on 17/04/2019
   * Email: ghazi.ennacer@gmail.com
   */
-object ConstantQueryTest extends App {
-  val cities = ElasticCompoundQueryBuilder.getDocsWithConstantScoreQuery(PropertiesLoader.CITY_INDEX, "name", "Konoha")
+object ConstantTermQueryTest extends App {
+  val cities = SearchAPIs.searchWithConstantScoreTermQuery(PropertiesLoader.CITY_INDEX, "name", "Konoha")
   cities.foreach(map => {
     println(City.toCity(map).toString)
   })

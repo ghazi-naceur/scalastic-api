@@ -8,11 +8,11 @@ import com.scalastic.api.entities.Person
   * Email: ghazi.ennacer@gmail.com
   */
 
-object BoolMustMatchPhraseQueryTest extends App {
+object BoolMustNotMatchPhraseQueryTest extends App {
   val map = Map[String, Any]("lastName" -> "Netero", "occupation" -> "Hunter")
 
-  val persons1 = SearchAPIs.searchWithBoolMustMatchPhraseQuery(PERSON_INDEX, map)
-  persons1.foreach(map => {
+  val persons2 = SearchAPIs.searchWithBoolMustNotMatchPhraseQuery(PERSON_INDEX, map)
+  persons2.foreach(map => {
     println(Person.toPerson(map).toString)
   })
 

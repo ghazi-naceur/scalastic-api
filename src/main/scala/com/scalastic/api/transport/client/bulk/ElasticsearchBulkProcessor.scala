@@ -1,16 +1,18 @@
-package com.scalastic.api
+package com.scalastic.api.transport.client.bulk
 
 import java.util
 
 import org.elasticsearch.action.DocWriteRequest
 import org.elasticsearch.action.bulk.BulkProcessor.Listener
 import org.elasticsearch.action.bulk.{BulkRequest, BulkResponse}
+
 import scala.collection.JavaConverters._
 
 /**
   * Created by Ghazi Naceur on 08/04/2019
   * Email: ghazi.ennacer@gmail.com
   */
+
 class ElasticsearchBulkProcessor extends Listener {
   override def beforeBulk(executionId: Long, request: BulkRequest): Unit = {}
 

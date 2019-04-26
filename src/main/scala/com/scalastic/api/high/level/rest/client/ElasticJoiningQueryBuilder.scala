@@ -1,12 +1,10 @@
-package com.scalastic.api
+package com.scalastic.api.high.level.rest.client
 
 import com.scalastic.api.client.ElasticClient
 import org.apache.lucene.search.join.ScoreMode
-import org.elasticsearch.action.search.{SearchRequest, SearchResponse}
-import org.elasticsearch.client.transport.TransportClient
+import org.elasticsearch.action.search.SearchRequest
 import org.elasticsearch.client.{RequestOptions, RestHighLevelClient}
 import org.elasticsearch.index.query.QueryBuilders
-import org.elasticsearch.join.query.JoinQueryBuilders
 import org.elasticsearch.search.SearchHit
 import org.elasticsearch.search.builder.SearchSourceBuilder
 
@@ -20,7 +18,6 @@ import scala.collection.mutable.ListBuffer
 object ElasticJoiningQueryBuilder {
 
   private val client: RestHighLevelClient = ElasticClient.client
-  private val transportClient: TransportClient = ElasticClient.transportClient
   private val from = 0
   private val size = 100
 
@@ -34,15 +31,15 @@ object ElasticJoiningQueryBuilder {
     extractResult(searchRequest, builder)
   }
 
-//  def hasChildQuery(esIndex: String, esType: String, searchCriteria: Map[String, Any]): SearchResponse = {
-//    val query = QueryBuilders.boolQuery()
-//    for ((k, v) <- searchCriteria) {
-//      query.must(QueryBuilders.termQuery(k, v))
-//    }
-//    val hasChildQueryBuilder = JoinQueryBuilders.hasChildQuery(esType, query, ScoreMode.None)
-//    transportClient.prepareSearch(esIndex)
-//      .setQuery(hasChildQueryBuilder).execute().actionGet()
-//  }
+  //  def hasChildQuery(esIndex: String, esType: String, searchCriteria: Map[String, Any]): SearchResponse = {
+  //    val query = QueryBuilders.boolQuery()
+  //    for ((k, v) <- searchCriteria) {
+  //      query.must(QueryBuilders.termQuery(k, v))
+  //    }
+  //    val hasChildQueryBuilder = JoinQueryBuilders.hasChildQuery(esType, query, ScoreMode.None)
+  //    transportClient.prepareSearch(esIndex)
+  //      .setQuery(hasChildQueryBuilder).execute().actionGet()
+  //  }
 
   private def extractResult(searchRequest: SearchRequest, builder: SearchSourceBuilder): List[Map[String, Any]] = {
     searchRequest.source(builder)

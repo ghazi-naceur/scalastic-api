@@ -22,14 +22,6 @@ object SearchAPIs {
     searchWithQueryBuilder(QueryBuilders.matchQuery(field, value), indices: _*)
   }
 
-  def searchWithBoolMustMatchPhraseQuery(searchCriteria: Map[String, Any], indices: String*): List[Map[String, Any]] = {
-    val query = QueryBuilders.boolQuery()
-    for ((k, v) <- searchCriteria) {
-      query.must(QueryBuilders.matchPhraseQuery(k, v))
-    }
-    searchWithQueryBuilder(query, indices: _*)
-  }
-
   def searchWithMultiMatchQuery(indices: Array[String], value: String, fieldNames: String*): List[Map[String, Any]] = {
     searchWithQueryBuilder(QueryBuilders.multiMatchQuery(value, fieldNames: _*), indices: _*)
   }
@@ -94,6 +86,57 @@ object SearchAPIs {
 
   def searchWithIdsQuery(index: String, ids: String*): List[Map[String, Any]] = {
     searchWithQueryBuilder(QueryBuilders.idsQuery().addIds(ids: _*), index)
+  }
+
+  def searchWithConstantScoreTermQuery(index: String, field: String, value: String): List[Map[String, Any]] = {
+    searchWithQueryBuilder(QueryBuilders.constantScoreQuery(QueryBuilders.termQuery(field, value)), index)
+  }
+
+  def searchWithBoolMustMatchPhraseQuery(index: String, searchCriteria: Map[String, Any]): List[Map[String, Any]] = {
+    val query = QueryBuilders.boolQuery()
+    for ((k, v) <- searchCriteria) {
+      query.must(QueryBuilders.matchPhraseQuery(k, v))
+    }
+    searchWithQueryBuilder(query, index)
+  }
+
+  def searchWithBoolMustNotMatchPhraseQuery(index: String, searchCriteria: Map[String, Any]): List[Map[String, Any]] = {
+    val query = QueryBuilders.boolQuery()
+    for ((k, v) <- searchCriteria) {
+      query.mustNot(QueryBuilders.matchPhraseQuery(k, v))
+    }
+    searchWithQueryBuilder(query, index)
+  }
+
+  def searchWithBoolShouldMatchPhraseQuery(index: String, searchCriteria: Map[String, Any]): List[Map[String, Any]] = {
+    val query = QueryBuilders.boolQuery()
+    for ((k, v) <- searchCriteria) {
+      query.should(QueryBuilders.matchPhraseQuery(k, v))
+    }
+    searchWithQueryBuilder(query, index)
+  }
+
+  def searchWithBoolFilterMatchPhraseQuery(index: String, searchCriteria: Map[String, Any]): List[Map[String, Any]] = {
+    val query = QueryBuilders.boolQuery()
+    for ((k, v) <- searchCriteria) {
+      query.filter(QueryBuilders.matchPhraseQuery(k, v))
+    }
+    searchWithQueryBuilder(query, index)
+  }
+
+  def searchWithDisMaxTermQuery(index: String, searchCriteria: Map[String, Any]): List[Map[String, Any]] = {
+    val query = QueryBuilders.disMaxQuery()
+    for ((k, v) <- searchCriteria) {
+      query.add(QueryBuilders.termQuery(k, v))
+    }
+    query.boost(1.2f).tieBreaker(0.7f)
+    searchWithQueryBuilder(query, index)
+  }
+
+  def searchWithBoostingTermQuery(index: String, positiveField: String, positiveValue: String, negativeField: String, negativeValue: String): List[Map[String, Any]] = {
+    val query = QueryBuilders.boostingQuery(QueryBuilders.termQuery(positiveField, positiveValue), QueryBuilders.termQuery(negativeField, negativeValue))
+    query.negativeBoost(0.2f)
+    searchWithQueryBuilder(query, index)
   }
 
   // This is the generic one !

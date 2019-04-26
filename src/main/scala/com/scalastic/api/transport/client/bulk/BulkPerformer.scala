@@ -1,4 +1,4 @@
-package com.scalastic.api
+package com.scalastic.api.transport.client.bulk
 
 import java.util.UUID
 import java.util.concurrent.TimeUnit

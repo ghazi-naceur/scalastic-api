@@ -1,6 +1,6 @@
 package com.scalastic.api.high.level.rest.client.joining.queries
 
-import com.scalastic.api.ElasticJoiningQueryBuilder
+import com.scalastic.api.high.level.rest.client.ElasticJoiningQueryBuilder
 
 /**
   * Created by Ghazi Naceur on 18/04/2019

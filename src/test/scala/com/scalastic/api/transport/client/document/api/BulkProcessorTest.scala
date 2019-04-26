@@ -1,7 +1,7 @@
 package com.scalastic.api.transport.client.document.api
 
-import com.scalastic.api.BulkPerformer
 import com.scalastic.api.entities.Person
+import com.scalastic.api.transport.client.bulk.BulkPerformer
 
 /**
   * Created by Ghazi Naceur on 08/04/2019
