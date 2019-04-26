@@ -14,7 +14,6 @@ object DataExtractor {
 
   private val client: RestHighLevelClient = ElasticClient.client
 
-
   def extractResult(searchRequest: SearchRequest, builder: SearchSourceBuilder): List[Map[String, Any]] = {
     searchRequest.source(builder)
     extractResult(searchRequest)

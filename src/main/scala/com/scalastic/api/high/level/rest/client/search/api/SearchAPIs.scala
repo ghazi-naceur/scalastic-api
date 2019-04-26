@@ -1,13 +1,22 @@
 package com.scalastic.api.high.level.rest.client.search.api
 
+import com.scalastic.api.client.ElasticClient
 import com.scalastic.api.utils.DataExtractor
-import org.elasticsearch.action.search.SearchRequest
+import org.elasticsearch.action.search.{SearchRequest, SearchScrollRequest}
+import org.elasticsearch.client.{RequestOptions, RestHighLevelClient}
+import org.elasticsearch.common.unit.TimeValue
 import org.elasticsearch.index.query.{MoreLikeThisQueryBuilder, Operator, QueryBuilder, QueryBuilders}
+import org.elasticsearch.search.SearchHit
 import org.elasticsearch.search.builder.SearchSourceBuilder
+import org.elasticsearch.search.sort.{FieldSortBuilder, SortOrder}
+
+import scala.collection.JavaConverters._
+import scala.collection.mutable.ListBuffer
 
 
 object SearchAPIs {
 
+  private val client: RestHighLevelClient = ElasticClient.client
   private val from = 0
   private val size = 100
 
@@ -137,6 +146,39 @@ object SearchAPIs {
     val query = QueryBuilders.boostingQuery(QueryBuilders.termQuery(positiveField, positiveValue), QueryBuilders.termQuery(negativeField, negativeValue))
     query.negativeBoost(0.2f)
     searchWithQueryBuilder(query, index)
+  }
+
+  def findAllWithScanAndScroll(index: String): List[Map[String, Any]] = {
+    var result = ListBuffer[Map[String, Any]]()
+    /**
+      * var scrollResp = client.prepareSearch(index)
+      * .setScroll(new TimeValue(60000))
+      * .setQuery(QueryBuilders.matchAllQuery())
+      * .setSize(100).get()
+      * do {
+      * for (hit: SearchHit <- scrollResp.getHits.getHits) {
+      * result += hit.getSourceAsMap.asScala.map(kv => (kv._1, kv._2)).toMap
+      * }
+      * scrollResp = client.prepareSearchScroll(scrollResp.getScrollId).setScroll(new TimeValue(60000)).execute().actionGet()
+      * } while (scrollResp.getHits.getHits.length != 0)
+      */
+    val request = new SearchRequest(index).scroll(new TimeValue(60000))
+    val searchSourceBuilder = new SearchSourceBuilder()
+    searchSourceBuilder.query(QueryBuilders.matchAllQuery())
+    searchSourceBuilder.sort(FieldSortBuilder.DOC_FIELD_NAME, SortOrder.ASC)
+    request.source(searchSourceBuilder)
+
+    var scrollResp = client.search(request, RequestOptions.DEFAULT)
+
+    do {
+      for (hit: SearchHit <- scrollResp.getHits.getHits) {
+        result += hit.getSourceAsMap.asScala.map(kv => (kv._1, kv._2)).toMap
+      }
+      //      scrollResp = client.searchScroll(new SearchScrollRequest(scrollResp.getScrollId), RequestOptions.DEFAULT).scroll(new TimeValue(60000))
+      scrollResp = client.scroll(new SearchScrollRequest(scrollResp.getScrollId).scroll(new TimeValue(60000)), RequestOptions.DEFAULT)
+    } while (scrollResp.getHits.getHits.length != 0)
+
+    result.toList
   }
 
   // This is the generic one !
