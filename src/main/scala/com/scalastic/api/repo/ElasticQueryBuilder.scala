@@ -103,12 +103,6 @@ object ElasticQueryBuilder {
     result.toList
   }
 
-  def getDocsWithFuzzyQuery(index: String, field: String, value: String): List[Map[String, Any]] = {
-    val searchRequest = new SearchRequest(index)
-    val builder = new SearchSourceBuilder().query(QueryBuilders.fuzzyQuery(field, value)).from(from).size(size)
-    extractResult(searchRequest, builder)
-  }
-
   def getDocsWithIdsQuery(index: String, ids: String*): List[Map[String, Any]] = {
     val searchRequest = new SearchRequest(index)
     val builder = new SearchSourceBuilder().query(QueryBuilders.idsQuery().addIds(ids: _*)).from(from).size(size)

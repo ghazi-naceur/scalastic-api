@@ -88,6 +88,10 @@ object SearchAPIs {
     searchWithQueryBuilder(QueryBuilders.regexpQuery(field, value), index)
   }
 
+  def searchWithFuzzyQuery(index: String, field: String, value: String): List[Map[String, Any]] = {
+    searchWithQueryBuilder(QueryBuilders.fuzzyQuery(field, value), index)
+  }
+
   // This is the generic one !
   def searchWithQueryBuilder(queryBuilder: QueryBuilder, indices: String*): List[Map[String, Any]] = {
     val searchSourceBuilder = new SearchSourceBuilder
