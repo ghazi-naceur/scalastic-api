@@ -84,6 +84,10 @@ object SearchAPIs {
     searchWithQueryBuilder(QueryBuilders.wildcardQuery(field, value), index)
   }
 
+  def searchWithRegexQuery(index: String, field: String, value: String): List[Map[String, Any]] = {
+    searchWithQueryBuilder(QueryBuilders.regexpQuery(field, value), index)
+  }
+
   // This is the generic one !
   def searchWithQueryBuilder(queryBuilder: QueryBuilder, indices: String*): List[Map[String, Any]] = {
     val searchSourceBuilder = new SearchSourceBuilder
