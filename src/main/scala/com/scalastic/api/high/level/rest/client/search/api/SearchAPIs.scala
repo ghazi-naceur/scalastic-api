@@ -150,18 +150,6 @@ object SearchAPIs {
 
   def findAllWithScanAndScroll(index: String): List[Map[String, Any]] = {
     var result = ListBuffer[Map[String, Any]]()
-    /**
-      * var scrollResp = client.prepareSearch(index)
-      * .setScroll(new TimeValue(60000))
-      * .setQuery(QueryBuilders.matchAllQuery())
-      * .setSize(100).get()
-      * do {
-      * for (hit: SearchHit <- scrollResp.getHits.getHits) {
-      * result += hit.getSourceAsMap.asScala.map(kv => (kv._1, kv._2)).toMap
-      * }
-      * scrollResp = client.prepareSearchScroll(scrollResp.getScrollId).setScroll(new TimeValue(60000)).execute().actionGet()
-      * } while (scrollResp.getHits.getHits.length != 0)
-      */
     val request = new SearchRequest(index).scroll(new TimeValue(60000))
     val searchSourceBuilder = new SearchSourceBuilder()
     searchSourceBuilder.query(QueryBuilders.matchAllQuery())
@@ -169,12 +157,10 @@ object SearchAPIs {
     request.source(searchSourceBuilder)
 
     var scrollResp = client.search(request, RequestOptions.DEFAULT)
-
     do {
       for (hit: SearchHit <- scrollResp.getHits.getHits) {
         result += hit.getSourceAsMap.asScala.map(kv => (kv._1, kv._2)).toMap
       }
-      //      scrollResp = client.searchScroll(new SearchScrollRequest(scrollResp.getScrollId), RequestOptions.DEFAULT).scroll(new TimeValue(60000))
       scrollResp = client.scroll(new SearchScrollRequest(scrollResp.getScrollId).scroll(new TimeValue(60000)), RequestOptions.DEFAULT)
     } while (scrollResp.getHits.getHits.length != 0)
 
