@@ -1,6 +1,4 @@
-package com.scalastic.api.high.level.rest.client.document.api
-
-import com.scalastic.api.high.level.rest.client.search.api.SearchAPIs
+package com.scalastic.api.high.level.rest.client.search.api
 
 /**
   * Created by Ghazi Naceur on 27/04/2019

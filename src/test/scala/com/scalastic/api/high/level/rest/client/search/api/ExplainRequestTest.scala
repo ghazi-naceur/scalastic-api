@@ -1,6 +1,5 @@
-package com.scalastic.api.high.level.rest.client.document.api
+package com.scalastic.api.high.level.rest.client.search.api
 
-import com.scalastic.api.high.level.rest.client.search.api.SearchAPIs
 import org.elasticsearch.action.explain.ExplainResponse
 
 /**

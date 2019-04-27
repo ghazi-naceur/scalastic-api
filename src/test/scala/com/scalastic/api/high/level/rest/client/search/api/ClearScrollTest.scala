@@ -1,8 +1,7 @@
-package com.scalastic.api.high.level.rest.client.document.api
+package com.scalastic.api.high.level.rest.client.search.api
 
 import com.scalastic.api.client.ElasticClient
 import com.scalastic.api.entities.Person
-import com.scalastic.api.high.level.rest.client.search.api.SearchAPIs
 import org.elasticsearch.action.search.SearchRequest
 import org.elasticsearch.client.{RequestOptions, RestHighLevelClient}
 import org.elasticsearch.common.unit.TimeValue
@@ -11,8 +10,8 @@ import org.elasticsearch.search.SearchHit
 import org.elasticsearch.search.builder.SearchSourceBuilder
 import org.elasticsearch.search.sort.{FieldSortBuilder, SortOrder}
 
-import scala.collection.JavaConverters._
 import scala.collection.mutable.ListBuffer
+import scala.collection.JavaConverters._
 
 /**
   * Created by Ghazi Naceur on 27/04/2019
