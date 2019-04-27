@@ -2,7 +2,7 @@ package com.scalastic.api.high.level.rest.client.search.api
 
 import com.scalastic.api.client.ElasticClient
 import com.scalastic.api.utils.DataExtractor
-import org.elasticsearch.action.search.{SearchRequest, SearchScrollRequest}
+import org.elasticsearch.action.search.{ClearScrollRequest, ClearScrollResponse, SearchRequest, SearchScrollRequest}
 import org.elasticsearch.client.{RequestOptions, RestHighLevelClient}
 import org.elasticsearch.common.unit.TimeValue
 import org.elasticsearch.index.query.{MoreLikeThisQueryBuilder, Operator, QueryBuilder, QueryBuilders}
@@ -165,6 +165,12 @@ object SearchAPIs {
     } while (scrollResp.getHits.getHits.length != 0)
 
     result.toList
+  }
+
+  def clearScroll(scrollId: String): ClearScrollResponse = {
+    val request = new ClearScrollRequest()
+    request.addScrollId(scrollId)
+    client.clearScroll(request, RequestOptions.DEFAULT)
   }
 
   // This is the generic one !
