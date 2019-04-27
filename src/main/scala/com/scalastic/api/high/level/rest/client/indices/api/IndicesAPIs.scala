@@ -26,7 +26,6 @@ import org.elasticsearch.action.admin.indices.template.get.{GetIndexTemplatesReq
 import org.elasticsearch.action.admin.indices.template.put.PutIndexTemplateRequest
 import org.elasticsearch.action.admin.indices.validate.query.{ValidateQueryRequest, ValidateQueryResponse}
 import org.elasticsearch.action.support.master.AcknowledgedResponse
-import org.elasticsearch.client.transport.TransportClient
 import org.elasticsearch.client._
 import org.elasticsearch.common.settings.Settings
 import org.elasticsearch.common.unit.{ByteSizeUnit, ByteSizeValue, TimeValue}
@@ -41,9 +40,7 @@ import scala.collection.JavaConverters._
   */
 object IndicesAPIs {
 
-  private val transportClient: TransportClient = ElasticClient.transportClient
   private val client: RestHighLevelClient = ElasticClient.client
-  private val llc: RestClientBuilder = ElasticClient.lowLevelClient
 
   def getIndicesList: List[String] = {
     val request = new ClusterHealthRequest
@@ -112,12 +109,13 @@ object IndicesAPIs {
 
   /** OPEN BUG : https://github.com/elastic/elasticsearch/issues/29652#
     *
-    *  targetIndex  The target index
-    *  sourceIndex  The source index
-    *  shardsNumber : The requested number of primary shards in the target index must be a
-    *                     factor of the number of shards in the source index. For example an index
-    *                     with 8 primary shards can be shrunk into 4, 2 or 1 primary shards or an
-    *                     index with 15 primary shards can be shrunk into 5, 3 or 1.
+    * targetIndex  The target index
+    * sourceIndex  The source index
+    * shardsNumber : The requested number of primary shards in the target index must be a
+    * factor of the number of shards in the source index. For example an index
+    * with 8 primary shards can be shrunk into 4, 2 or 1 primary shards or an
+    * index with 15 primary shards can be shrunk into 5, 3 or 1.
+    *
     * @return ResizeResponse
     */
   //  def splitIndex(targetIndex: String, sourceIndex: String, shardsNumber: Int): ResizeResponse = {
