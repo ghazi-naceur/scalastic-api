@@ -39,7 +39,7 @@ import scala.collection.JavaConverters._
   * Created by Ghazi Naceur on 18/04/2019
   * Email: ghazi.ennacer@gmail.com
   */
-object ElasticHighLevelRestClient {
+object IndicesAPIs {
 
   private val transportClient: TransportClient = ElasticClient.transportClient
   private val client: RestHighLevelClient = ElasticClient.client

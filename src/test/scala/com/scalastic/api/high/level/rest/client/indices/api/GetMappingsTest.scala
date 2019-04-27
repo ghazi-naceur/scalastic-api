@@ -7,7 +7,7 @@ import org.elasticsearch.action.admin.indices.mapping.get.GetMappingsResponse
   * Email: ghazi.ennacer@gmail.com
   */
 object GetMappingsTest extends App {
-  private val response: GetMappingsResponse = ElasticHighLevelRestClient.getMappings("new_index_5", "new_alias")
+  private val response: GetMappingsResponse = IndicesAPIs.getMappings("new_index_5", "new_alias")
   response.getMappings.forEach(map => {
     println(map.index)
     println(map.key)

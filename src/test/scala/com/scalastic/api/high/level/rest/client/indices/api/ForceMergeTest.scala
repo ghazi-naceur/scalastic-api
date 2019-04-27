@@ -8,11 +8,11 @@ import org.elasticsearch.action.admin.indices.forcemerge.ForceMergeResponse
   */
 object ForceMergeTest extends App {
   // Force merge for all indices
-  private val response: ForceMergeResponse = ElasticHighLevelRestClient.forceMerge()
+  private val response: ForceMergeResponse = IndicesAPIs.forceMerge()
   println(response.getStatus)
   println("-----")
   // Force merge for specific indices
-  private val response2: ForceMergeResponse = ElasticHighLevelRestClient.forceMerge("persons", "sc_persons")
+  private val response2: ForceMergeResponse = IndicesAPIs.forceMerge("persons", "sc_persons")
   println(response2.getStatus)
 
   System.exit(0)

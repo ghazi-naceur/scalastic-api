@@ -7,7 +7,7 @@ import org.elasticsearch.action.admin.indices.settings.get.GetSettingsResponse
   * Email: ghazi.ennacer@gmail.com
   */
 object GetSettingsTest extends App {
-  private val response: GetSettingsResponse = ElasticHighLevelRestClient.getSettings("persons", "sc_persons")
+  private val response: GetSettingsResponse = IndicesAPIs.getSettings("persons", "sc_persons")
 
   println(" >>>  Get default settings :")
   response.getIndexToDefaultSettings.forEach(setting => {

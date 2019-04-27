@@ -8,11 +8,11 @@ import org.elasticsearch.action.admin.indices.cache.clear.ClearIndicesCacheRespo
   */
 object ClearCacheTest extends App {
   // Clear cache for all indices
-  private val response: ClearIndicesCacheResponse = ElasticHighLevelRestClient.clearCache()
+  private val response: ClearIndicesCacheResponse = IndicesAPIs.clearCache()
   println(response.getStatus)
   println("-----")
   // Clear cache for specific indices
-  private val response2: ClearIndicesCacheResponse = ElasticHighLevelRestClient.clearCache("persons", "sc_persons")
+  private val response2: ClearIndicesCacheResponse = IndicesAPIs.clearCache("persons", "sc_persons")
   println(response2.getStatus)
 
   System.exit(0)

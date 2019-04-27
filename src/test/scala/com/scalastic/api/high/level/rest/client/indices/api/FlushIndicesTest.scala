@@ -8,11 +8,11 @@ import org.elasticsearch.action.admin.indices.flush.FlushResponse
   */
 object FlushIndicesTest extends App {
   // Flushing all indices
-  private val response: FlushResponse = ElasticHighLevelRestClient.flushIndices()
+  private val response: FlushResponse = IndicesAPIs.flushIndices()
   println(response.getStatus)
   println("-----")
   // Flushing all indices
-  private val response2: FlushResponse = ElasticHighLevelRestClient.flushIndices("persons", "sc_persons")
+  private val response2: FlushResponse = IndicesAPIs.flushIndices("persons", "sc_persons")
   println(response2.getStatus)
 
   System.exit(0)

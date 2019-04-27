@@ -5,8 +5,8 @@ package com.scalastic.api.high.level.rest.client.indices.api
   * Email: ghazi.ennacer@gmail.com
   */
 object IndicesExistsTest extends App {
-  println(ElasticHighLevelRestClient.indicesExists("sc_persons", "persons"))
-  println(ElasticHighLevelRestClient.indicesExists("sc_persons", "persons", "abc"))
+  println(IndicesAPIs.indicesExists("sc_persons", "persons"))
+  println(IndicesAPIs.indicesExists("sc_persons", "persons", "abc"))
 
   System.exit(0)
 }

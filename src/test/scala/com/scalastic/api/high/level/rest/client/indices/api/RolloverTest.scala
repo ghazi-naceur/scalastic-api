@@ -21,14 +21,14 @@ object RolloverTest extends App {
   // 3- Creation of "rollover_alias_1" for "rollover_index_2"
   // 4- 100 entities in "rollover_index_2"
 
-  ElasticHighLevelRestClient.createIndex("rollover_index_1", "rollover_alias_1", null)
+  IndicesAPIs.createIndex("rollover_index_1", "rollover_alias_1", null)
 
   val person = Person("Isaac", "Netero", 125, "Hunter")
   for (i <- 0 until 501) {
     SingleDocumentAPIs.index("rollover_alias_1", "rollover", person.toMap())
   }
 
-  private val response: RolloverResponse = ElasticHighLevelRestClient.rollover("rollover_alias_1", "rollover_index_3", 16)
+  private val response: RolloverResponse = IndicesAPIs.rollover("rollover_alias_1", "rollover_index_3", 16)
   println(response.getOldIndex)
   println(response.getNewIndex)
   println(response.isDryRun)

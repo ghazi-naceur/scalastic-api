@@ -21,7 +21,7 @@ object ShrinkIndexTest extends App {
   // 1- Fill up source index
   // 2- readonly source index
   // 3- shrink (target index should be inexistant)
-  private val response: ResizeResponse = ElasticHighLevelRestClient.shrinkIndex("csvs_dup", "scala_index_2")
+  private val response: ResizeResponse = IndicesAPIs.shrinkIndex("csvs_dup", "scala_index_2")
   println(response.index())
   println(response.isAcknowledged)
 

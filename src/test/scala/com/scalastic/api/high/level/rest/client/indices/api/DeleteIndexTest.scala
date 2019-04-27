@@ -5,7 +5,7 @@ package com.scalastic.api.high.level.rest.client.indices.api
   * Email: ghazi.ennacer@gmail.com
   */
 object DeleteIndexTest extends App {
-  ElasticHighLevelRestClient.deleteIndex("scala_index_2")
+  IndicesAPIs.deleteIndex("scala_index_2")
 
   System.exit(0)
 }

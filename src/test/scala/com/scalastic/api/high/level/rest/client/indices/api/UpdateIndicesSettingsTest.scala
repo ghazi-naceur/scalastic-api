@@ -15,7 +15,7 @@ object UpdateIndicesSettingsTest extends App {
     //    .put("index.number_of_shards", 3) // This field is non dynamic. Once set, it can't be overridden
     .put("index.number_of_replicas", 2)
     .put("index.blocks.read_only", false)
-  private val response: AcknowledgedResponse = ElasticHighLevelRestClient.updateIndicesSettings(settings, "new_indice_1", "new_indice_2")
+  private val response: AcknowledgedResponse = IndicesAPIs.updateIndicesSettings(settings, "new_indice_1", "new_indice_2")
   println(response.isAcknowledged)
 
   System.exit(0)

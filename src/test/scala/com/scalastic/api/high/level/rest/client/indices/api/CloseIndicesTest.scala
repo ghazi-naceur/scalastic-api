@@ -7,7 +7,7 @@ import org.elasticsearch.action.support.master.AcknowledgedResponse
   * Email: ghazi.ennacer@gmail.com
   */
 object CloseIndicesTest extends App {
-  private val response: AcknowledgedResponse = ElasticHighLevelRestClient.closeIndices("sc_persons", "persons", "cities")
+  private val response: AcknowledgedResponse = IndicesAPIs.closeIndices("sc_persons", "persons", "cities")
   println(response.isAcknowledged)
 
   System.exit(0)

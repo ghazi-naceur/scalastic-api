@@ -11,7 +11,7 @@ object PutIndexTemplateTest extends App {
   private val settings: Settings.Builder = Settings.builder()
     .put("index.number_of_shards", 3)
     .put("index.number_of_replicas", 2)
-  private val response: AcknowledgedResponse = ElasticHighLevelRestClient.putIndexTemplate("generated_index", "new-pattern", "generated-log-*", 1, settings)
+  private val response: AcknowledgedResponse = IndicesAPIs.putIndexTemplate("generated_index", "new-pattern", "generated-log-*", 1, settings)
   println(response.isAcknowledged)
 
   // the templates list : http://localhost:9200/_cat/templates?pretty

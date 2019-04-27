@@ -8,17 +8,17 @@ import org.elasticsearch.client.GetAliasesResponse
   */
 object GetAliasTest extends App {
 
-  private val response: GetAliasesResponse = ElasticHighLevelRestClient.getAlias("rollover_index_2")
+  private val response: GetAliasesResponse = IndicesAPIs.getAlias("rollover_index_2")
   println(response.getAliases)
   println(response.status())
   println(response.getError)
 
-  private val response2: GetAliasesResponse = ElasticHighLevelRestClient.getAlias("rollover_index_2", "rollover_alias_1")
+  private val response2: GetAliasesResponse = IndicesAPIs.getAlias("rollover_index_2", "rollover_alias_1")
   println(response2.getAliases)
   println(response2.status())
   println(response2.getError)
 
-  private val response3: GetAliasesResponse = ElasticHighLevelRestClient.getAlias("rollover_index_2", "rollover_alias_1", "abc")
+  private val response3: GetAliasesResponse = IndicesAPIs.getAlias("rollover_index_2", "rollover_alias_1", "abc")
   println(response3.getAliases)
   println(response3.status())
   println(response3.getError)

@@ -8,11 +8,11 @@ import org.elasticsearch.action.admin.indices.refresh.RefreshResponse
   */
 object RefreshApiTest extends App {
   // Refresh all indices
-  private val request: RefreshResponse = ElasticHighLevelRestClient.refreshIndices()
+  private val request: RefreshResponse = IndicesAPIs.refreshIndices()
   println(request.getStatus)
   println("-----")
   // Refresh specific indices
-  private val request2: RefreshResponse = ElasticHighLevelRestClient.refreshIndices("persons", "sc_persons")
+  private val request2: RefreshResponse = IndicesAPIs.refreshIndices("persons", "sc_persons")
   println(request2.getStatus)
 
   System.exit(0)

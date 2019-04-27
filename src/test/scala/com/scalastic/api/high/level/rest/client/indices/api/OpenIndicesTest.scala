@@ -7,7 +7,7 @@ import org.elasticsearch.action.admin.indices.open.OpenIndexResponse
   * Email: ghazi.ennacer@gmail.com
   */
 object OpenIndicesTest extends App {
-  private val response: OpenIndexResponse = ElasticHighLevelRestClient.openIndices("sc_persons", "persons", "cities")
+  private val response: OpenIndexResponse = IndicesAPIs.openIndices("sc_persons", "persons", "cities")
   println(response.isAcknowledged)
 
   System.exit(0)

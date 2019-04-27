@@ -13,11 +13,11 @@ object CreateIndexTest extends App {
     .put("index.number_of_replicas", 2)
     .put("index.blocks.read_only", false)
 
-  ElasticHighLevelRestClient.createIndex("scala_index_2", null, settings)
+  IndicesAPIs.createIndex("scala_index_2", null, settings)
 
   // With explicit mapping
   val mapping = "{ \"properties\" : {   \"field_one\" : { \"type\" : \"text\"},  \"field_two\" : { \"type\" : \"text\"},  \"field_three\" : { \"type\" : \"text\" }, \"field_four\" : { \"type\" : \"text\" } }}"
-  ElasticHighLevelRestClient.createIndex("new_scala_index_3", "new_scala_type", null, mapping)
+  IndicesAPIs.createIndex("new_scala_index_3", "new_scala_type", null, mapping)
 
   System.exit(0)
 }

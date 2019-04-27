@@ -14,7 +14,7 @@ object ValidateQueryTest extends App {
     .must(QueryBuilders.queryStringQuery("*:*"))
     .filter(QueryBuilders.termQuery("lastName", "Netero"))
 
-  private val response: ValidateQueryResponse = ElasticHighLevelRestClient.validateQuery(builder, "persons")
+  private val response: ValidateQueryResponse = IndicesAPIs.validateQuery(builder, "persons")
   println(response.isValid)
   response.getQueryExplanation.forEach(explanation => {
     println(explanation.isValid)

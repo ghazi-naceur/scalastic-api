@@ -7,7 +7,7 @@ import org.elasticsearch.action.admin.indices.template.get.GetIndexTemplatesResp
   * Email: ghazi.ennacer@gmail.com
   */
 object GetIndexTemplatesTest extends App {
-  private val response: GetIndexTemplatesResponse = ElasticHighLevelRestClient.getIndexTemplates()
+  private val response: GetIndexTemplatesResponse = IndicesAPIs.getIndexTemplates()
   response.getIndexTemplates.forEach(template => {
     println(template.getName)
     println(template.getOrder)

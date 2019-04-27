@@ -19,7 +19,7 @@ object IndexAliasesTest extends App {
   //  println(response2.isAcknowledged)
 
   // 3- Removing index
-  private val response3: AcknowledgedResponse = ElasticHighLevelRestClient.indexAliases("some_new_index", "some_new_alias", AliasActions.Type.REMOVE_INDEX)
+  private val response3: AcknowledgedResponse = IndicesAPIs.indexAliases("some_new_index", "some_new_alias", AliasActions.Type.REMOVE_INDEX)
   println(response3.isAcknowledged)
   System.exit(0)
 }

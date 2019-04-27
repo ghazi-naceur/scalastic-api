@@ -5,7 +5,7 @@ package com.scalastic.api.high.level.rest.client.indices.api
   * Email: ghazi.ennacer@gmail.com
   */
 object GetAllIndicesTest extends App {
-  ElasticHighLevelRestClient.getIndicesList.foreach(index => {
+  IndicesAPIs.getIndicesList.foreach(index => {
     println(index)
   })
 

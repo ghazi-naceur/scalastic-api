@@ -7,7 +7,7 @@ import org.elasticsearch.action.admin.indices.mapping.get.GetFieldMappingsRespon
   * Email: ghazi.ennacer@gmail.com
   */
 object GetFieldMappingTest extends App {
-  private val response: GetFieldMappingsResponse = ElasticHighLevelRestClient.getFieldMapping("new_index_5", "new_alias", "id", "age")
+  private val response: GetFieldMappingsResponse = IndicesAPIs.getFieldMapping("new_index_5", "new_alias", "id", "age")
   response.mappings().forEach((k, v) => {
     println(k)
     println(v.forEach((k, v) => {

@@ -5,9 +5,9 @@ package com.scalastic.api.high.level.rest.client.indices.api
   * Email: ghazi.ennacer@gmail.com
   */
 object ExistsAliasTest extends App {
-  println(ElasticHighLevelRestClient.existsAlias("rollover_index_2"))
-  println(ElasticHighLevelRestClient.existsAlias("rollover_index_2", "rollover_alias_1"))
-  println(ElasticHighLevelRestClient.existsAlias("rollover_index_2", "rollover_alias_1", "abc"))
+  println(IndicesAPIs.existsAlias("rollover_index_2"))
+  println(IndicesAPIs.existsAlias("rollover_index_2", "rollover_alias_1"))
+  println(IndicesAPIs.existsAlias("rollover_index_2", "rollover_alias_1", "abc"))
 
   System.exit(0)
 }

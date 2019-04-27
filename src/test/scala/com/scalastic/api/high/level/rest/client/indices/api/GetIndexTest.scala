@@ -7,7 +7,7 @@ import org.elasticsearch.action.admin.indices.get.GetIndexResponse
   * Email: ghazi.ennacer@gmail.com
   */
 object GetIndexTest extends App {
-  private val response: GetIndexResponse = ElasticHighLevelRestClient.getIndex("sc_persons")
+  private val response: GetIndexResponse = IndicesAPIs.getIndex("sc_persons")
   println(response.getIndices.foreach(index => {
     println(index)
   }))
