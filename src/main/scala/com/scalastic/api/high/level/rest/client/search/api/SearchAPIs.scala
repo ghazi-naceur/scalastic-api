@@ -1,11 +1,16 @@
 package com.scalastic.api.high.level.rest.client.search.api
 
+import java.util
+import java.util.HashMap
+
 import com.scalastic.api.client.ElasticClient
 import com.scalastic.api.utils.DataExtractor
 import org.elasticsearch.action.search._
-import org.elasticsearch.client.{RequestOptions, RestHighLevelClient}
+import org.elasticsearch.client.{Request, RequestOptions, RestClient, RestHighLevelClient}
 import org.elasticsearch.common.unit.TimeValue
 import org.elasticsearch.index.query.{MoreLikeThisQueryBuilder, Operator, QueryBuilder, QueryBuilders}
+import org.elasticsearch.script.ScriptType
+import org.elasticsearch.script.mustache.SearchTemplateRequest
 import org.elasticsearch.search.SearchHit
 import org.elasticsearch.search.builder.SearchSourceBuilder
 import org.elasticsearch.search.sort.{FieldSortBuilder, SortOrder}
@@ -17,6 +22,7 @@ import scala.collection.mutable.ListBuffer
 object SearchAPIs {
 
   private val client: RestHighLevelClient = ElasticClient.client
+  private val restClient: RestClient = ElasticClient.restClient
   private val from = 0
   private val size = 100
 
@@ -191,6 +197,39 @@ object SearchAPIs {
         result += hit.getSourceAsMap.asScala.map(kv => (kv._1, kv._2)).toMap
       })
     })
+    result.toList
+  }
+
+  def searchTemplate(index: String, field: String, value: String, searchName: String): List[Map[String, Any]] = {
+    var result = ListBuffer[Map[String, Any]]()
+    val scriptRequest = new Request("POST", "_scripts/" + searchName)
+    scriptRequest.setJsonEntity(
+      "{" +
+        "  \"script\": {" +
+        "    \"lang\": \"mustache\"," +
+        "    \"source\": {" +
+        "      \"query\": { \"match\" : { \"{{field}}\" : \"{{value}}\" } }," +
+        "      \"size\" : \"{{size}}\"" +
+        "    }" +
+        "  }" +
+        "}")
+    restClient.performRequest(scriptRequest)
+    val request = new SearchTemplateRequest()
+    request.setRequest(new SearchRequest(index))
+
+    request.setScriptType(ScriptType.STORED)
+    request.setScript(searchName)
+
+    val params = new util.HashMap[String, AnyRef]()
+    params.put("field", field)
+    params.put("value", value)
+    params.put("size", "100")
+    request.setScriptParams(params)
+
+    val response = client.searchTemplate(request, RequestOptions.DEFAULT)
+    for (hit: SearchHit <- response.getResponse.getHits.getHits) {
+      result += hit.getSourceAsMap.asScala.map(kv => (kv._1, kv._2)).toMap
+    }
     result.toList
   }
 
