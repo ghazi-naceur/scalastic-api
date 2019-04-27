@@ -4,6 +4,7 @@ import java.util
 
 import com.scalastic.api.client.ElasticClient
 import com.scalastic.api.utils.DataExtractor
+import org.elasticsearch.action.fieldcaps.{FieldCapabilities, FieldCapabilitiesRequest}
 import org.elasticsearch.action.search._
 import org.elasticsearch.client.{Request, RequestOptions, RestClient, RestHighLevelClient}
 import org.elasticsearch.common.unit.TimeValue
@@ -261,6 +262,15 @@ object SearchAPIs {
       }
     }
     result.toList
+  }
+
+  def fieldCapabilities(field: String, indices: String*): util.Map[String, util.Map[String, FieldCapabilities]] = {
+    val request = new FieldCapabilitiesRequest()
+      .fields(field)
+      .indices(indices: _*)
+
+    val response = client.fieldCaps(request, RequestOptions.DEFAULT)
+    response.get()
   }
 
   // This is the generic one !
