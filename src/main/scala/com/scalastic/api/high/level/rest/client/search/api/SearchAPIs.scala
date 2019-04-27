@@ -2,7 +2,7 @@ package com.scalastic.api.high.level.rest.client.search.api
 
 import com.scalastic.api.client.ElasticClient
 import com.scalastic.api.utils.DataExtractor
-import org.elasticsearch.action.search.{ClearScrollRequest, ClearScrollResponse, SearchRequest, SearchScrollRequest}
+import org.elasticsearch.action.search._
 import org.elasticsearch.client.{RequestOptions, RestHighLevelClient}
 import org.elasticsearch.common.unit.TimeValue
 import org.elasticsearch.index.query.{MoreLikeThisQueryBuilder, Operator, QueryBuilder, QueryBuilders}
@@ -171,6 +171,27 @@ object SearchAPIs {
     val request = new ClearScrollRequest()
     request.addScrollId(scrollId)
     client.clearScroll(request, RequestOptions.DEFAULT)
+  }
+
+  def multiSearch(searchCriteria: Map[String, Any]): List[Map[String, _]] = {
+    val request = new MultiSearchRequest()
+    var result: ListBuffer[Map[String, _]] = ListBuffer()
+    for (criteria <- searchCriteria) {
+      val sourceBuilder = new SearchSourceBuilder()
+      val searchRequest = new SearchRequest()
+      sourceBuilder.query(QueryBuilders.matchQuery(criteria._1, criteria._2))
+      searchRequest.source(sourceBuilder)
+      request.add(searchRequest)
+    }
+
+    val response = client.msearch(request, RequestOptions.DEFAULT)
+    response.getResponses.foreach(response => {
+      response.getResponse.getHits.getTotalHits
+      response.getResponse.getHits.getHits.foreach(hit => {
+        result += hit.getSourceAsMap.asScala.map(kv => (kv._1, kv._2)).toMap
+      })
+    })
+    result.toList
   }
 
   // This is the generic one !
