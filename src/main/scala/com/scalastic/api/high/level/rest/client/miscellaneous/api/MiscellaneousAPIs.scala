@@ -16,4 +16,8 @@ object MiscellaneousAPIs {
   def info(): MainResponse = {
     client.info(RequestOptions.DEFAULT)
   }
+
+  def ping(): Boolean = {
+    client.ping(RequestOptions.DEFAULT)
+  }
 }
