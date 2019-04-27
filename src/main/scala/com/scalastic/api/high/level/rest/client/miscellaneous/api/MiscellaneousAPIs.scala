@@ -4,7 +4,7 @@ import java.util
 
 import com.scalastic.api.client.ElasticClient
 import org.elasticsearch.action.main.MainResponse
-import org.elasticsearch.client.xpack.{XPackInfoRequest, XPackInfoResponse}
+import org.elasticsearch.client.xpack.{XPackInfoRequest, XPackInfoResponse, XPackUsageRequest, XPackUsageResponse}
 import org.elasticsearch.client.{RequestOptions, RestHighLevelClient}
 
 /**
@@ -32,5 +32,10 @@ object MiscellaneousAPIs {
       XPackInfoRequest.Category.LICENSE,
       XPackInfoRequest.Category.FEATURES))
     client.xpack().info(request, RequestOptions.DEFAULT)
+  }
+
+  def xpackUsage(): XPackUsageResponse = {
+    val request = new XPackUsageRequest()
+    client.xpack().usage(request, RequestOptions.DEFAULT)
   }
 }
