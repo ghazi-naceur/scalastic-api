@@ -4,6 +4,7 @@ import java.util
 
 import com.scalastic.api.client.ElasticClient
 import com.scalastic.api.utils.DataExtractor
+import org.elasticsearch.action.explain.{ExplainRequest, ExplainResponse}
 import org.elasticsearch.action.fieldcaps.{FieldCapabilities, FieldCapabilitiesRequest}
 import org.elasticsearch.action.search._
 import org.elasticsearch.client.{Request, RequestOptions, RestClient, RestHighLevelClient}
@@ -287,6 +288,12 @@ object SearchAPIs {
     val request = new RankEvalRequest(specification, indices)
     val response = client.rankEval(request, RequestOptions.DEFAULT)
     response.getPartialResults.asScala.toMap
+  }
+
+  def explain(esIndex: String, esType: String, esId: String, field: String, value: String): ExplainResponse = {
+    val request = new ExplainRequest(esIndex, esType, esId)
+    request.query(QueryBuilders.termQuery(field, value))
+    client.explain(request, RequestOptions.DEFAULT)
   }
 
   // This is the generic one !
