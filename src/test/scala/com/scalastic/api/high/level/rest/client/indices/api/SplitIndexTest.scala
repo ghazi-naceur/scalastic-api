@@ -1,4 +1,4 @@
-package com.scalastic.api.high.level.rest.client
+package com.scalastic.api.high.level.rest.client.indices.api
 
 /**
   * Created by Ghazi Naceur on 20/04/2019

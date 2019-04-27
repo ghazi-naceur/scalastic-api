@@ -1,10 +1,8 @@
-package com.scalastic.api.high.level.rest.client
+package com.scalastic.api.high.level.rest.client.indices.api
 
 import java.util
-
-import org.elasticsearch.client.SyncedFlushResponse
-
 import scala.collection.JavaConverters._
+import org.elasticsearch.client.SyncedFlushResponse
 
 /**
   * Created by Ghazi Naceur on 20/04/2019

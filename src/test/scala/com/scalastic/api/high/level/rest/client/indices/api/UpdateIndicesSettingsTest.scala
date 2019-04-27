@@ -1,4 +1,4 @@
-package com.scalastic.api.high.level.rest.client
+package com.scalastic.api.high.level.rest.client.indices.api
 
 import org.elasticsearch.action.support.master.AcknowledgedResponse
 import org.elasticsearch.common.settings.Settings

@@ -1,4 +1,4 @@
-package com.scalastic.api.high.level.rest.client
+package com.scalastic.api.high.level.rest.client.indices.api
 
 import com.scalastic.api.entities.Person
 import com.scalastic.api.high.level.rest.client.document.api.SingleDocumentAPIs

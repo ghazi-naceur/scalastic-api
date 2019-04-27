@@ -1,4 +1,4 @@
-package com.scalastic.api.high.level.rest.client
+package com.scalastic.api.high.level.rest.client.indices.api
 
 import java.util.concurrent.TimeUnit
 
@@ -32,6 +32,7 @@ import org.elasticsearch.common.settings.Settings
 import org.elasticsearch.common.unit.{ByteSizeUnit, ByteSizeValue, TimeValue}
 import org.elasticsearch.common.xcontent.XContentType
 import org.elasticsearch.index.query.QueryBuilder
+
 import scala.collection.JavaConverters._
 
 /**
