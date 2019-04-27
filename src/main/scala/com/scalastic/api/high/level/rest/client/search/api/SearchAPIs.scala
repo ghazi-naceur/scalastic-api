@@ -9,6 +9,7 @@ import org.elasticsearch.action.search._
 import org.elasticsearch.client.{Request, RequestOptions, RestClient, RestHighLevelClient}
 import org.elasticsearch.common.unit.TimeValue
 import org.elasticsearch.index.query.{MoreLikeThisQueryBuilder, Operator, QueryBuilder, QueryBuilders}
+import org.elasticsearch.index.rankeval._
 import org.elasticsearch.script.ScriptType
 import org.elasticsearch.script.mustache.{MultiSearchTemplateRequest, SearchTemplateRequest}
 import org.elasticsearch.search.SearchHit
@@ -271,6 +272,21 @@ object SearchAPIs {
 
     val response = client.fieldCaps(request, RequestOptions.DEFAULT)
     response.get()
+  }
+
+  def rankEvaluation(index: String, id: String, requestId: String, field: String, value: String, indices: Array[String]): Map[String, EvalQueryQuality] = {
+    val metric = new PrecisionAtK()
+    val ratedDocs = new util.ArrayList[RatedDocument]()
+    ratedDocs.add(new RatedDocument(index, id, 1))
+    val searchQuery = new SearchSourceBuilder()
+    searchQuery.query(QueryBuilders.matchQuery(field, value))
+    val ratedRequest = new RatedRequest(requestId, ratedDocs, searchQuery)
+    val req: List[RatedRequest] = List(ratedRequest)
+    val ratedRequests: util.List[RatedRequest] = req.asJava
+    val specification = new RankEvalSpec(ratedRequests, metric)
+    val request = new RankEvalRequest(specification, indices)
+    val response = client.rankEval(request, RequestOptions.DEFAULT)
+    response.getPartialResults.asScala.toMap
   }
 
   // This is the generic one !
