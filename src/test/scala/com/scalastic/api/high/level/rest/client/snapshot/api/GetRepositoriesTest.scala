@@ -12,7 +12,7 @@ import scala.collection.JavaConverters._
   * Email: ghazi.ennacer@gmail.com
   */
 object GetRepositoriesTest extends App {
-  private val response: GetRepositoriesResponse = SnapshotAPIs.getRepositories()
+  private val response: GetRepositoriesResponse = SnapshotAPIs.getRepositories
   private val data: util.List[RepositoryMetaData] = response.repositories()
   for (data: RepositoryMetaData <- data.asScala) {
     println(data.name())
