@@ -3,7 +3,7 @@ package com.scalastic.api.high.level.rest.client.ingest.api
 import java.nio.charset.StandardCharsets
 
 import com.scalastic.api.client.ElasticClient
-import org.elasticsearch.action.ingest.{GetPipelineRequest, GetPipelineResponse, PutPipelineRequest}
+import org.elasticsearch.action.ingest.{DeletePipelineRequest, GetPipelineRequest, GetPipelineResponse, PutPipelineRequest}
 import org.elasticsearch.action.support.master.AcknowledgedResponse
 import org.elasticsearch.client.{RequestOptions, RestHighLevelClient}
 import org.elasticsearch.common.bytes.BytesArray
@@ -27,5 +27,10 @@ object IngestAPIs {
   def getPipeline(pipelineIds: String*): GetPipelineResponse = {
     val request = new GetPipelineRequest(pipelineIds: _*)
     client.ingest().getPipeline(request, RequestOptions.DEFAULT)
+  }
+
+  def deletePipeline(pipelineId: String): AcknowledgedResponse = {
+    val request = new DeletePipelineRequest(pipelineId)
+    client.ingest().deletePipeline(request, RequestOptions.DEFAULT)
   }
 }
