@@ -2,7 +2,7 @@ package com.scalastic.api.high.level.rest.client.cluster.api
 
 import com.scalastic.api.client.ElasticClient
 import org.elasticsearch.action.admin.cluster.health.{ClusterHealthRequest, ClusterHealthResponse}
-import org.elasticsearch.action.admin.cluster.settings.{ClusterUpdateSettingsRequest, ClusterUpdateSettingsResponse}
+import org.elasticsearch.action.admin.cluster.settings.{ClusterGetSettingsRequest, ClusterGetSettingsResponse, ClusterUpdateSettingsRequest, ClusterUpdateSettingsResponse}
 import org.elasticsearch.client.{RequestOptions, RestHighLevelClient}
 import org.elasticsearch.common.settings.Settings
 
@@ -17,6 +17,13 @@ object ClusterAPIs {
   def clusterHealth(indices: String*): ClusterHealthResponse = {
     val request = new ClusterHealthRequest(indices: _*)
     client.cluster().health(request, RequestOptions.DEFAULT)
+  }
+
+  def clusterGetSettings(): ClusterGetSettingsResponse = {
+    val request = new ClusterGetSettingsRequest()
+    request.includeDefaults(true)
+    request.local(true)
+    client.cluster().getSettings(request, RequestOptions.DEFAULT)
   }
 
   def clusterUpdateSettings(transientSettings: Settings, persistentSettings: Settings): ClusterUpdateSettingsResponse = {
