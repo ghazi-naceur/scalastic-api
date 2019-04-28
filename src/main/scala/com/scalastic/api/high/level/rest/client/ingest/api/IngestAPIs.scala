@@ -3,7 +3,7 @@ package com.scalastic.api.high.level.rest.client.ingest.api
 import java.nio.charset.StandardCharsets
 
 import com.scalastic.api.client.ElasticClient
-import org.elasticsearch.action.ingest.PutPipelineRequest
+import org.elasticsearch.action.ingest.{GetPipelineRequest, GetPipelineResponse, PutPipelineRequest}
 import org.elasticsearch.action.support.master.AcknowledgedResponse
 import org.elasticsearch.client.{RequestOptions, RestHighLevelClient}
 import org.elasticsearch.common.bytes.BytesArray
@@ -19,8 +19,13 @@ object IngestAPIs {
 
   def putPipeline(field: String, value: String, pipelineId: String): AcknowledgedResponse = {
     val source = "{\"description\":\"my set of processors\"," +
-        "\"processors\":[{\"set\":{\"field\":\""+field+"\",\"value\":\""+value+"\"}}]}"
+      "\"processors\":[{\"set\":{\"field\":\"" + field + "\",\"value\":\"" + value + "\"}}]}"
     val request = new PutPipelineRequest(pipelineId, new BytesArray(source.getBytes(StandardCharsets.UTF_8)), XContentType.JSON)
     client.ingest().putPipeline(request, RequestOptions.DEFAULT)
+  }
+
+  def getPipeline(pipelineIds: String*): GetPipelineResponse = {
+    val request = new GetPipelineRequest(pipelineIds: _*)
+    client.ingest().getPipeline(request, RequestOptions.DEFAULT)
   }
 }
