@@ -4,6 +4,7 @@ import com.scalastic.api.client.ElasticClient
 import org.elasticsearch.action.admin.cluster.repositories.delete.DeleteRepositoryRequest
 import org.elasticsearch.action.admin.cluster.repositories.get.{GetRepositoriesRequest, GetRepositoriesResponse}
 import org.elasticsearch.action.admin.cluster.repositories.put.PutRepositoryRequest
+import org.elasticsearch.action.admin.cluster.repositories.verify.{VerifyRepositoryRequest, VerifyRepositoryResponse}
 import org.elasticsearch.action.support.master.AcknowledgedResponse
 import org.elasticsearch.client.{RequestOptions, RestHighLevelClient}
 import org.elasticsearch.common.settings.Settings
@@ -47,5 +48,10 @@ object SnapshotAPIs {
   def deleteRepository(repositoryName: String): AcknowledgedResponse = {
     val request = new DeleteRepositoryRequest(repositoryName)
     client.snapshot().deleteRepository(request, RequestOptions.DEFAULT)
+  }
+
+  def verifyRepository(repositoryName: String): VerifyRepositoryResponse = {
+    val request = new VerifyRepositoryRequest(repositoryName)
+    client.snapshot().verifyRepository(request, RequestOptions.DEFAULT)
   }
 }
