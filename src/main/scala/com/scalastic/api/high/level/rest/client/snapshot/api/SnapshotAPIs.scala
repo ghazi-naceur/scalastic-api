@@ -6,6 +6,7 @@ import org.elasticsearch.action.admin.cluster.repositories.get.{GetRepositoriesR
 import org.elasticsearch.action.admin.cluster.repositories.put.PutRepositoryRequest
 import org.elasticsearch.action.admin.cluster.repositories.verify.{VerifyRepositoryRequest, VerifyRepositoryResponse}
 import org.elasticsearch.action.admin.cluster.snapshots.create.{CreateSnapshotRequest, CreateSnapshotResponse}
+import org.elasticsearch.action.admin.cluster.snapshots.get.{GetSnapshotsRequest, GetSnapshotsResponse}
 import org.elasticsearch.action.support.master.AcknowledgedResponse
 import org.elasticsearch.client.{RequestOptions, RestHighLevelClient}
 import org.elasticsearch.common.settings.Settings
@@ -66,5 +67,13 @@ object SnapshotAPIs {
     request.masterNodeTimeout(TimeValue.timeValueMinutes(10))
     request.waitForCompletion(true)
     client.snapshot().create(request, RequestOptions.DEFAULT)
+  }
+
+  def getSnapshots(repositoryName: String): GetSnapshotsResponse = {
+    val request = new GetSnapshotsRequest()
+    request.repository(repositoryName)
+    request.masterNodeTimeout(TimeValue.timeValueMinutes(10))
+    request.verbose(true)
+    client.snapshot().get(request, RequestOptions.DEFAULT)
   }
 }
