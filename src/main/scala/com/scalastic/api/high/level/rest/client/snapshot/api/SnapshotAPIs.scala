@@ -7,6 +7,7 @@ import org.elasticsearch.action.admin.cluster.repositories.put.PutRepositoryRequ
 import org.elasticsearch.action.admin.cluster.repositories.verify.{VerifyRepositoryRequest, VerifyRepositoryResponse}
 import org.elasticsearch.action.admin.cluster.snapshots.create.{CreateSnapshotRequest, CreateSnapshotResponse}
 import org.elasticsearch.action.admin.cluster.snapshots.get.{GetSnapshotsRequest, GetSnapshotsResponse}
+import org.elasticsearch.action.admin.cluster.snapshots.status.{SnapshotsStatusRequest, SnapshotsStatusResponse}
 import org.elasticsearch.action.support.master.AcknowledgedResponse
 import org.elasticsearch.client.{RequestOptions, RestHighLevelClient}
 import org.elasticsearch.common.settings.Settings
@@ -75,5 +76,13 @@ object SnapshotAPIs {
     request.masterNodeTimeout(TimeValue.timeValueMinutes(10))
     request.verbose(true)
     client.snapshot().get(request, RequestOptions.DEFAULT)
+  }
+
+  //  The Snapshots Status API allows to retrieve detailed information about snapshots in progress.
+  def statusSnapshots(repositoryName: String): SnapshotsStatusResponse = {
+    val request = new SnapshotsStatusRequest()
+    request.repository(repositoryName)
+    request.masterNodeTimeout(TimeValue.timeValueMinutes(1))
+    client.snapshot().status(request, RequestOptions.DEFAULT)
   }
 }
