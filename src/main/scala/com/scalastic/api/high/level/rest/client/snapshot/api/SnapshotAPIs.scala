@@ -6,6 +6,7 @@ import org.elasticsearch.action.admin.cluster.repositories.get.{GetRepositoriesR
 import org.elasticsearch.action.admin.cluster.repositories.put.PutRepositoryRequest
 import org.elasticsearch.action.admin.cluster.repositories.verify.{VerifyRepositoryRequest, VerifyRepositoryResponse}
 import org.elasticsearch.action.admin.cluster.snapshots.create.{CreateSnapshotRequest, CreateSnapshotResponse}
+import org.elasticsearch.action.admin.cluster.snapshots.delete.DeleteSnapshotRequest
 import org.elasticsearch.action.admin.cluster.snapshots.get.{GetSnapshotsRequest, GetSnapshotsResponse}
 import org.elasticsearch.action.admin.cluster.snapshots.status.{SnapshotsStatusRequest, SnapshotsStatusResponse}
 import org.elasticsearch.action.support.master.AcknowledgedResponse
@@ -84,5 +85,12 @@ object SnapshotAPIs {
     request.repository(repositoryName)
     request.masterNodeTimeout(TimeValue.timeValueMinutes(1))
     client.snapshot().status(request, RequestOptions.DEFAULT)
+  }
+
+  def deleteSnapshot(repositoryName: String, snapshotName: String): AcknowledgedResponse = {
+    val request = new DeleteSnapshotRequest(repositoryName)
+    request.snapshot(snapshotName)
+    request.masterNodeTimeout(TimeValue.timeValueMinutes(1))
+    client.snapshot().delete(request, RequestOptions.DEFAULT)
   }
 }
