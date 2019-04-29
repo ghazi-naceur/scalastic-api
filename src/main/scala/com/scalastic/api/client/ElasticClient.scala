@@ -4,6 +4,7 @@ import java.net.InetAddress
 
 import com.scalastic.api.config.PropertiesLoader
 import org.apache.http.HttpHost
+import org.apache.http.client.config.RequestConfig
 import org.elasticsearch.client.transport.TransportClient
 import org.elasticsearch.client.{RestClient, RestClientBuilder, RestHighLevelClient}
 import org.elasticsearch.common.settings.Settings
@@ -19,6 +20,9 @@ object ElasticClient {
   val port: Int = PropertiesLoader.PORT
   val httpPort: Int = PropertiesLoader.HTTP_PORT
   val lowLevelClient: RestClientBuilder = RestClient.builder(new HttpHost(host, port))
+    .setRequestConfigCallback(
+      (requestConfigBuilder: RequestConfig.Builder) =>
+        requestConfigBuilder.setConnectTimeout(5000).setSocketTimeout(60000)).setMaxRetryTimeoutMillis(60000)
   val restClient: RestClient = RestClient.builder(new HttpHost(host, port)).build()
   val client = new RestHighLevelClient(lowLevelClient)
 
