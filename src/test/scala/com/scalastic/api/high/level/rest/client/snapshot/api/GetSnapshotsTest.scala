@@ -11,6 +11,7 @@ import scala.collection.JavaConverters._
 object GetSnapshotsTest extends App {
   private val response: GetSnapshotsResponse = SnapshotAPIs.getSnapshots("repo")
   for (snapshot <- response.getSnapshots.asScala) {
+    println(snapshot.snapshotId().getName)
     println(snapshot.snapshotId())
     println(snapshot.basic())
     println(snapshot.indices())
