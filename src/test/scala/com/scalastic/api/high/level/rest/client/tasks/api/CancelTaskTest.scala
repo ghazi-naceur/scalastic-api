@@ -1,7 +1,6 @@
 package com.scalastic.api.high.level.rest.client.tasks.api
 
 import org.elasticsearch.action.admin.cluster.node.tasks.cancel.CancelTasksResponse
-
 import scala.collection.JavaConverters._
 
 /**
