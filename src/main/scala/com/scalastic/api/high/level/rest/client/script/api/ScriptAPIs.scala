@@ -1,7 +1,7 @@
 package com.scalastic.api.high.level.rest.client.script.api
 
 import com.scalastic.api.client.ElasticClient
-import org.elasticsearch.action.admin.cluster.storedscripts.{GetStoredScriptRequest, GetStoredScriptResponse, PutStoredScriptRequest}
+import org.elasticsearch.action.admin.cluster.storedscripts.{DeleteStoredScriptRequest, GetStoredScriptRequest, GetStoredScriptResponse, PutStoredScriptRequest}
 import org.elasticsearch.action.support.master.AcknowledgedResponse
 import org.elasticsearch.client.{RequestOptions, RestHighLevelClient}
 import org.elasticsearch.common.bytes.BytesArray
@@ -28,5 +28,12 @@ object ScriptAPIs {
     request.content(new BytesArray(script), XContentType.JSON)
     request.masterNodeTimeout(TimeValue.timeValueMinutes(1))
     client.putScript(request, RequestOptions.DEFAULT)
+  }
+
+  def deleteStoredScript(scriptId: String): AcknowledgedResponse = {
+    val deleteRequest = new DeleteStoredScriptRequest(scriptId)
+    deleteRequest.timeout(TimeValue.timeValueSeconds(60))
+    deleteRequest.masterNodeTimeout(TimeValue.timeValueSeconds(50))
+    client.deleteScript(deleteRequest, RequestOptions.DEFAULT)
   }
 }
