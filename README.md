@@ -2,12 +2,13 @@
 
 This project provides Elasticsearch queries written in Scala.
 
-### Prerequisites
+## Prerequisites
 
  Scala 2.12 <br/>
  Elasticsearch 6.5.4 <br/>
 
-### Implemented APIs
+## Implemented APIs
+### High Level Rest Client
 #### Cluster APIs
 https://github.com/ghazi-naceur/scalastic-api/tree/master/src/main/scala/com/scalastic/api/high/level/rest/client/cluster/api
 #### Document APIs
@@ -29,6 +30,17 @@ https://github.com/ghazi-naceur/scalastic-api/tree/master/src/main/scala/com/sca
 #### Tasks APIs
 https://github.com/ghazi-naceur/scalastic-api/tree/master/src/main/scala/com/scalastic/api/high/level/rest/client/tasks/api
 
+### Transport Client
+#### Administration APIs
+https://github.com/ghazi-naceur/scalastic-api/tree/master/src/main/scala/com/scalastic/api/transport/client/administration
+#### Bulk API
+https://github.com/ghazi-naceur/scalastic-api/tree/master/src/main/scala/com/scalastic/api/transport/client/bulk
+#### Document APIs
+https://github.com/ghazi-naceur/scalastic-api/tree/master/src/main/scala/com/scalastic/api/transport/client/document/api
 
-### Getting started
+## Getting started
 You may find tests here : https://github.com/ghazi-naceur/scalastic-api/tree/master/src/test/scala/com/scalastic/api
+### High Level Rest Client
+https://github.com/ghazi-naceur/scalastic-api/tree/master/src/test/scala/com/scalastic/api/high/level/rest/client
+### Transport Client
+https://github.com/ghazi-naceur/scalastic-api/tree/master/src/test/scala/com/scalastic/api/transport/client
