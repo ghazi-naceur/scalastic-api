@@ -1,0 +1,29 @@
+PUT http://localhost:9200/tasks
+{
+  "tasks" : {
+    "mappings" : {
+      "task" : {
+        "properties" : {
+          "taskId" : {
+            "type" : "keyword"
+          },
+          "description" : {
+            "type" : "text"
+          },
+          "assignee" : {
+            "type" : "text"
+          },
+          "assigner" : {
+            "type" : "text"
+          },
+          "startTime" : {
+            "type" : "date"
+          },
+          "endTime" : {
+            "type" : "date"
+          }
+        }
+      }
+    }
+  }
+}

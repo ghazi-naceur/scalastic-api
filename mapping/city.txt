@@ -1,4 +1,4 @@
-http://localhost:9200/cities
+PUT http://localhost:9200/cities
 {
   "cities" : {
     "mappings" : {
